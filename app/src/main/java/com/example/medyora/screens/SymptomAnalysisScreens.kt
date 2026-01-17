@@ -30,6 +30,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -99,6 +102,7 @@ val symptomViewModel : SymptomViewModel= hiltViewModel()
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewModel) {
     var durationExpanded by remember { mutableStateOf(false) }
@@ -325,23 +329,24 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
 
                                 val durations = SymptomDuration.values().toList()
 
-                                Box {
+                                ExposedDropdownMenuBox(
+                                    expanded = durationExpanded,
+                                    onExpandedChange = { durationExpanded = !durationExpanded }
+                                ) {
                                     OutlinedTextField(
                                         value = uiState.duration?.name ?: "",
                                         onValueChange = {},
                                         readOnly = true,
                                         label = { Text("Duration") },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable { durationExpanded = true },
                                         trailingIcon = {
-                                            Icon(
-                                                Icons.Default.ArrowDropDown,
-                                                contentDescription = "Dropdown"
-                                            )
-                                        }
+                                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = durationExpanded)
+                                        },
+                                        modifier = Modifier
+                                            .menuAnchor()
+                                            .fillMaxWidth()
                                     )
-                                    DropdownMenu(
+
+                                    ExposedDropdownMenu(
                                         expanded = durationExpanded,
                                         onDismissRequest = { durationExpanded = false }
                                     ) {
@@ -355,6 +360,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                                     durationExpanded = false
                                                 }
                                             )
+
                                         }
                                     }
                                 }
@@ -363,23 +369,24 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
 
                                 val severities = SymptomSeverity.values().toList()
 
-                                Box {
+                                ExposedDropdownMenuBox(
+                                    expanded = severityExpanded,
+                                    onExpandedChange = { severityExpanded = !severityExpanded }
+                                ) {
                                     OutlinedTextField(
                                         value = uiState.severity?.name ?: "",
                                         onValueChange = {},
                                         readOnly = true,
                                         label = { Text("Severity") },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable { durationExpanded = true },
                                         trailingIcon = {
-                                            Icon(
-                                                Icons.Default.ArrowDropDown,
-                                                contentDescription = "Dropdown"
-                                            )
-                                        }
+                                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = severityExpanded)
+                                        },
+                                        modifier = Modifier
+                                            .menuAnchor()
+                                            .fillMaxWidth()
                                     )
-                                    DropdownMenu(
+
+                                    ExposedDropdownMenu(
                                         expanded = severityExpanded,
                                         onDismissRequest = { severityExpanded = false }
                                     ) {
@@ -393,43 +400,39 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                                     severityExpanded = false
                                                 }
                                             )
+
                                         }
                                     }
                                 }
 
+                                Spacer(modifier = Modifier.height(16.dp))
 
+                                Button(
+                                    onClick = {
+                                        viewModel.analyzeSymptom()
+                                    },
+                                    colors = ButtonDefaults.buttonColors(Blue200)
+                                ) {
 
-
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(
-                            onClick = {
-                                viewModel.analyzeSymptom()
-                            },
-                            colors = ButtonDefaults.buttonColors(Blue200)
-                        ) {
-
-                            Row(horizontalArrangement = Arrangement.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.Psychology,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Analyze Symptoms", fontSize = 16.sp)
+                                    Row(horizontalArrangement = Arrangement.Center) {
+                                        Icon(
+                                            imageVector = Icons.Default.Psychology,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text("Analyze Symptoms", fontSize = 16.sp)
+                                    }
+                                }
                             }
                         }
                     }
+
                 }
             }
-
         }
     }
 }
-
 @Composable
 fun SymptomResultScreen(
     flowState: SymptomFlowState.Result
