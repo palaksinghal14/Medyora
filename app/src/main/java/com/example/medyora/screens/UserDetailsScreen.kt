@@ -119,6 +119,29 @@ fun UserDetailsScreen(
         else -> 0f
     }
 
+    fun isPersonalDetailsValid():Boolean{
+        return name.isNotBlank() &&
+                age.toIntOrNull()?.let{it>0} == true &&
+                dob.isNotBlank() &&
+                gender.isNotBlank() &&
+                contact.isNotBlank()
+
+    }
+
+    fun isPhysicalDetailsValid():Boolean{
+        return activityLevel.isNotBlank()
+
+    }
+
+    fun isMedicalDetailsValid():Boolean{
+        return selectedConditions.isNotEmpty() || extraConditions.isNotEmpty()
+
+    }
+
+    //to show error when user tries to click next or submit without filling necessary details
+    var showErrors by remember { mutableStateOf(false) }
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -216,7 +239,13 @@ fun UserDetailsScreen(
 
             }
 
-
+            // to make sure that user enter all the data before moving on to next step
+            val isCurrentStepValid= when(currentSection){
+                 1-> isPhysicalDetailsValid()
+                2-> isPersonalDetailsValid()
+                3->isMedicalDetailsValid()
+                else -> false
+            }
 
             Row(
                 modifier = Modifier
@@ -234,25 +263,28 @@ fun UserDetailsScreen(
                     Text(text = "Back")
                 }
 
+                //check if all the fields are filled and then only will move to next section
                 Button(
                     onClick = {
+                        if(currentSection!=3) currentSection++ else{
+                            val userProfile= UserProfile(
+                                name=name,
+                                age = age.toIntOrNull() ?: 0,
+                                dob = dob,
+                                gender = gender,
+                                contact = contact,
+                                heightCm = height.toIntOrNull() ?: 0,
+                                weightKg = weight.toIntOrNull() ?: 0,
+                                activityLevel = activityLevel,
+                                conditions = selectedConditions + extraConditions
+                            )
 
-                         val userProfile= UserProfile(
-                             name=name,
-                             age = age.toIntOrNull() ?: 0,
-                             dob = dob,
-                             gender = gender,
-                             contact = contact,
-                             heightCm = height.toIntOrNull() ?: 0,
-                             weightKg = weight.toIntOrNull() ?: 0,
-                             activityLevel = activityLevel,
-                             conditions = selectedConditions + extraConditions
-                         )
-                         if(currentSection!=3) currentSection++ else
-                        userViewModel.SaveUserProfile(userProfile) {
-                            OnNavToMainPage()
+                            userViewModel.SaveUserProfile(userProfile) {
+                                OnNavToMainPage()
+                            }
                         }
                     },
+                    enabled =isCurrentStepValid,
                     colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                 ) {
                     Text(text = if(currentSection!=3) "Next" else "Get Started")
@@ -328,7 +360,7 @@ fun PersonalDetailsCard(
                 onValueChange = NameOnChange,
                 label = {
                     Text(
-                        text = "Enter Name",
+                        text = "Name  *",
                         color = Gray700
                     )
                 },
@@ -349,7 +381,7 @@ fun PersonalDetailsCard(
                 onValueChange = AgeOnChange,
                 label = {
                     Text(
-                        text = "Enter Age",
+                        text = "Age  *",
                         color = Gray700
                     )
                 },
@@ -372,7 +404,7 @@ fun PersonalDetailsCard(
                 label =
                     {
                         Text(
-                            text = "DOB:dd-mm-yy",
+                            text = "DOB:dd-mm-yy  *",
                             color = Gray700
                         )
                     },
@@ -394,7 +426,7 @@ fun PersonalDetailsCard(
                 onValueChange = ContactOnChange,
                 label = {
                     Text(
-                        text = "Contact Details",
+                        text = "Contact Details  *",
                         color = Gray700
                     )
                 },
@@ -420,7 +452,7 @@ fun PersonalDetailsCard(
                     onValueChange = GenderOnChange,
                     label = {
                         Text(
-                            text = "Gender",
+                            text = "Gender  *",
                             color = Gray700
                         )
                     },
@@ -548,7 +580,7 @@ fun PhysicalDetailsCard(
                 OutlinedTextField(
                     value = activityLevel,
                     onValueChange = onActivityLevelChange,
-                    label = { Text("Active or Inactive ",
+                    label = { Text("Lifestyle  *",
                         color= Gray700) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Blue600,

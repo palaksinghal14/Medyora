@@ -21,6 +21,7 @@ class UserRepository @Inject constructor(
             .await()
 
     }
+
     suspend fun getUserProfile(): UserProfile?{
         val uid = auth.currentUser?.uid ?: return null
 
