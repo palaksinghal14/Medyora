@@ -22,6 +22,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            "String",
+            "GEMINI_API_KEY",
+            "\"${providers.gradleProperty("GEMINI_API_KEY").get()}\""
+        )
     }
 
     buildTypes {
@@ -42,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig=true
     }
 
     packaging {
@@ -61,6 +67,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
 
     // extended icons library
     implementation("androidx.compose.material:material-icons-extended")
@@ -101,8 +108,16 @@ dependencies {
     // firebase authentication
     implementation("com.google.firebase:firebase-auth")
 
-    // firebase authentication
-    implementation("com.google.firebase:firebase-auth")
+    // firebase firestore
+    implementation("com.google.firebase:firebase-firestore")
+
+    //gemini
+    implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
+
+    //for json parisng
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
+
 
 
 

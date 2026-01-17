@@ -22,7 +22,9 @@ import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +36,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.medyora.navigation.MainRoutes
 import com.example.medyora.ui.theme.Blue100
 import com.example.medyora.ui.theme.Blue200
 import com.example.medyora.ui.theme.Blue50
@@ -45,27 +49,37 @@ import com.example.medyora.ui.theme.Green50
 import com.example.medyora.ui.theme.Green600
 import com.example.medyora.ui.theme.Purple50
 import com.example.medyora.ui.theme.Purple600
+import com.example.medyora.viewmodels.MainUiState
+import com.example.medyora.viewmodels.MainViewModel
 
 
-
-data class MainFeature(
-    val id: String,
-    val title: String,
-    val description: String,
-    val icon: ImageVector,
-    val iconColor: Color,
-    val backgroundColor: Color,
-    val borderColor: Color,
-    val onClick: () -> Unit
-
-)
 @Composable
 fun HomeScreen(
-    userName:String,
-    OnNavToSymptomAnalysis:()-> Unit,
-    OnNavToFoodAnalysis:()-> Unit,
-    OnNavToDoctorAnalysis:()-> Unit
-) {
+    viewModel: MainViewModel,
+    mainNavController: NavHostController
+){
+    val uiState = viewModel.uiState.value
+
+
+        when (uiState) {
+            is MainUiState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            is MainUiState.Success -> {
+                HomeContent(userName = uiState.userName,mainNavController)
+            }
+
+            is MainUiState.Error -> {
+                Text(text = uiState.message)
+            }
+        }
+
+}
+
+@Composable
+fun HomeContent( userName: String , mainNavController: NavHostController)
+{
     val mainFeatures = listOf(
         MainFeature(
             id = "symptom-analysis",
@@ -75,7 +89,9 @@ fun HomeScreen(
             iconColor = Blue600,
             backgroundColor = Blue50,
             borderColor = Blue200,
-            onClick = OnNavToSymptomAnalysis
+            onClick ={
+                mainNavController.navigate(MainRoutes.SYMPTOM)
+            }
         ),
         MainFeature(
             id = "smart-food-guide",
@@ -85,19 +101,10 @@ fun HomeScreen(
             iconColor = Green600,
             backgroundColor = Green50,
             borderColor = Green600.copy(alpha = 0.3f),
-            onClick = OnNavToFoodAnalysis
-        ),
-        MainFeature(
-            id = "nearby-doctors",
-            title = "Nearby Doctors",
-            description = "Find and book appointments with doctors near you",
-            icon = Icons.Default.LocationOn,
-            iconColor = Purple600,
-            backgroundColor = Purple50,
-            borderColor = Purple600.copy(alpha = 0.3f),
-            onClick = OnNavToDoctorAnalysis
-        )
-    )
+            onClick = {
+                mainNavController.navigate(MainRoutes.FOOD)
+            }
+        ))
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -162,6 +169,22 @@ fun HomeScreen(
     }
 
 }
+
+
+
+
+data class MainFeature(
+    val id: String,
+    val title: String,
+    val description: String,
+    val icon: ImageVector,
+    val iconColor: Color,
+    val backgroundColor: Color,
+    val borderColor: Color,
+    val onClick: () -> Unit
+
+)
+
 
 
 @Composable

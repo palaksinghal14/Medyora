@@ -16,7 +16,7 @@ val Blue600 = Color(0xFF3A57D3)
 val Blue50 = Color(0xFFC9DDF5)
 val Blue100 = Color(0xFF43778C)
 val Blue200 = Color(0xFF9BCCE8)
-val Blue500 = Color(0xFF0EA5E9)
+val Blue500: Color = Color(0xFF0EA5E9)
 
 // Neutral colors
 val White = Color(0xFFFFFFFF)
@@ -33,11 +33,13 @@ val Gray900 = Color(0xFF111827)
 
 // Accent colors
 val Green600 = Color(0xFF059669)
-val Green50 = Color(0xFFF0FDF4)
+val Green50 = Color(0xFFACE1BC)
 val Red600 = Color(0xFFDC2626)
-val Red50 = Color(0xFFFEF2F2)
+val Red50 = Color(0xFF791A1A)
 val Purple600 = Color(0xFF7C3AED)
-val Purple50 = Color(0xFFFAF5FF)
-val Orange500 = Color(0xFFF97316)
-val Orange50 = Color(0xFFFFF7ED)
+val Purple50 = Color(0xFFB5A6C5)
+val Orange500 = Color(0xFFB65311)
+val Orange50 = Color(0xFFD29952)
+val Green100 = Color(0xFF8F9B29)
+val Yellow50 = Color(0xFFF5A84B)
 

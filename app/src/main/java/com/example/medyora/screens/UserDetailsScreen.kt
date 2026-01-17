@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -52,6 +53,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.medyora.model.UserProfile
 import com.example.medyora.ui.theme.Blue100
 import com.example.medyora.ui.theme.Blue200
 import com.example.medyora.ui.theme.Blue50
@@ -62,11 +65,16 @@ import com.example.medyora.ui.theme.Gray200
 import com.example.medyora.ui.theme.Gray500
 import com.example.medyora.ui.theme.Gray700
 import com.example.medyora.ui.theme.Gray900
+import com.example.medyora.viewmodels.UserProfileState
+import com.example.medyora.viewmodels.UserViewModel
 
 @Composable
 fun UserDetailsScreen(
     OnNavToMainPage:() ->Unit
 ){
+
+    val userViewModel: UserViewModel= hiltViewModel()
+    val state =userViewModel.state.value
 
     var currentSection by remember { mutableStateOf(1) }
 
@@ -109,7 +117,6 @@ fun UserDetailsScreen(
          2-> 0.66f
          3-> 1f
         else -> 0f
-
     }
 
     Box(
@@ -229,18 +236,45 @@ fun UserDetailsScreen(
 
                 Button(
                     onClick = {
+
+                         val userProfile= UserProfile(
+                             name=name,
+                             age = age.toIntOrNull() ?: 0,
+                             dob = dob,
+                             gender = gender,
+                             contact = contact,
+                             heightCm = height.toIntOrNull() ?: 0,
+                             weightKg = weight.toIntOrNull() ?: 0,
+                             activityLevel = activityLevel,
+                             conditions = selectedConditions + extraConditions
+                         )
                          if(currentSection!=3) currentSection++ else
-                       OnNavToMainPage()
+                        userViewModel.SaveUserProfile(userProfile) {
+                            OnNavToMainPage()
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                 ) {
                     Text(text = if(currentSection!=3) "Next" else "Get Started")
                 }
             }
-
         }
     }
+  when(state){
+      is UserProfileState.Error -> {
+          Text(
+              text = "something wrong",
+              color = Color.Red
+          )
+      }
+      is UserProfileState.Loading -> {
+          CircularProgressIndicator()
+      }
 
+      else ->{
+
+      }
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -259,6 +293,8 @@ fun PersonalDetailsCard(
 ) {
     val genderOptions = listOf("Female", "Male", "Others", "Prefer not to say")
     var genderExpanded by remember { mutableStateOf(false) }
+
+
 
     Card(
         modifier = Modifier
@@ -422,6 +458,8 @@ fun PersonalDetailsCard(
             }
         }
     }
+
+
 }
 
     @Composable
@@ -664,6 +702,3 @@ fun MedicalHistoryCard(
         }
     }
 }
-
-
-

@@ -1,7 +1,6 @@
 package com.example.medyora.screens
 
 
-import android.window.SplashScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,12 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -27,18 +26,34 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.medyora.ui.theme.Blue100
 import com.example.medyora.ui.theme.Blue200
-import com.example.medyora.ui.theme.Blue50
 import com.example.medyora.ui.theme.Blue600
+import com.example.medyora.viewmodels.SplashState
+import com.example.medyora.viewmodels.SplashViewModel
+import com.example.medyora.viewmodels.UserViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(OnNavToWelcomePage: ()-> (Unit)){
-    LaunchedEffect(Unit) {
-        delay(2000)
-        OnNavToWelcomePage()
+fun SplashScreen(
+    OnNavToWelcomePage: ()-> Unit,
+    OnNavToUserDetailsPage: () -> Unit,
+    OnNavToMainPage: () -> Unit
+){
+    val splashViewModel: SplashViewModel = hiltViewModel()
+    val  state = splashViewModel.splashstate.value
+
+    LaunchedEffect(state) {
+        when (state) {
+            is SplashState.GoToWelcome -> OnNavToWelcomePage()
+            is SplashState.GoToUserDetails -> OnNavToUserDetailsPage()
+            is SplashState.GoToMain -> OnNavToMainPage()
+            else -> {} // Loading state, do nothing
+
+        }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,9 +68,9 @@ fun SplashScreen(OnNavToWelcomePage: ()-> (Unit)){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Logo placeholder - you can replace with actual logo
+            //replace with actual logo
             Card(
-                modifier = Modifier.size(100.dp),
+                modifier = Modifier.size(  100.dp),
                 colors = CardDefaults.cardColors(containerColor = Blue600),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {

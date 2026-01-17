@@ -1,5 +1,4 @@
 package com.example.medyora.ui.theme
-
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -14,6 +13,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+
+
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Blue500,
@@ -63,8 +65,6 @@ private val LightColorScheme = lightColorScheme(
     onError = White,
     errorContainer = Red50,
     onErrorContainer = Red600
-
-
 )
 
 @Composable
@@ -98,3 +98,4 @@ fun MedyoraTheme(
         content = content
     )
 }
+    
