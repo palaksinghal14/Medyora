@@ -4,16 +4,16 @@ data class UserProfile(
     val uid : String="",
 
     // Personal Details
-    val name: String ,
-    val age: Int ,
-    val dob: String ,
-    val gender: String ,
-    val contact: String ,
+    val name: String ="",
+    val age: Int=0 ,
+    val dob: String="" ,
+    val gender: String ="",
+    val contact: String ="",
 
     // Physical Details
-    val heightCm: Int?,
-    val weightKg: Int?,
-    val activityLevel: String,
+    val heightCm: Int?=0,
+    val weightKg: Int?=0,
+    val activityLevel: String="",
 
     // Medical Details
     val conditions: List<String> = emptyList(),
