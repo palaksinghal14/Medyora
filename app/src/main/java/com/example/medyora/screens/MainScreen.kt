@@ -139,12 +139,6 @@ fun MainBottomBar(
 
 
 
-@Composable
-fun ProfileScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Profile Screen")
-    }
-}
 
 
 
