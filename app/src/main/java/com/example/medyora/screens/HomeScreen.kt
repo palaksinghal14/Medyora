@@ -58,7 +58,7 @@ fun HomeScreen(
     viewModel: MainViewModel,
     mainNavController: NavHostController
 ){
-    val uiState = viewModel.uiState.value
+    val uiState =viewModel.uiState.value
 
 
         when (uiState) {

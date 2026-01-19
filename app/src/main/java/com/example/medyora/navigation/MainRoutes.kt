@@ -6,8 +6,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.medyora.screens.EditProfileRoute
 import com.example.medyora.screens.FoodGuideScreen
 import com.example.medyora.screens.HomeScreen
+import com.example.medyora.screens.ProfileRoute
 import com.example.medyora.screens.ProfileScreen
 import com.example.medyora.screens.SettingsScreen
 import com.example.medyora.screens.SymptomAnalysisScreen
@@ -37,7 +39,19 @@ fun MainNavGraph(
         }
 
         composable(MainRoutes.PROFILE) {
-            ProfileScreen()
+            ProfileRoute (
+                onEditProfile = {
+                    navController.navigate("editprofile")
+                }
+            )
+        }
+
+        composable("editprofile") {
+            EditProfileRoute (
+                onBack  = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(MainRoutes.SETTINGS) {
