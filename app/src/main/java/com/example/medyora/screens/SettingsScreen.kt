@@ -209,6 +209,7 @@ fun SettingsScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.padding(8.dp)
                         ) {
                             Icon(
