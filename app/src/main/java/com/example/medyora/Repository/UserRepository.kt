@@ -42,4 +42,15 @@ class UserRepository @Inject constructor(
             .delete()
             .await()
     }
+
+    suspend fun updateUserProfile(profile: UserProfile){
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("user not authenticated ")
+
+        firestore.collection("users")
+            .document(uid)
+            .set(profile.copy(uid=uid))
+            .await()
+
+    }
+
 }

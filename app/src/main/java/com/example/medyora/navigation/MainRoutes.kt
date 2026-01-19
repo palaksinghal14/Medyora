@@ -25,10 +25,8 @@ object MainRoutes {
 
 @Composable
 fun MainNavGraph(
-
     mainViewModel: MainViewModel,
     navController: NavHostController,
-
 ) {
     NavHost(
         navController = navController,

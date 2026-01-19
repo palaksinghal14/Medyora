@@ -241,8 +241,8 @@ fun UserDetailsScreen(
 
             // to make sure that user enter all the data before moving on to next step
             val isCurrentStepValid= when(currentSection){
-                 1-> isPhysicalDetailsValid()
-                2-> isPersonalDetailsValid()
+                 1-> isPersonalDetailsValid()
+                2-> isPhysicalDetailsValid()
                 3->isMedicalDetailsValid()
                 else -> false
             }

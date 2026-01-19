@@ -82,7 +82,7 @@ fun ProfileRoute(
     val viewModel: ProfileViewModel = hiltViewModel()
     val profileState by viewModel.profileState.collectAsState()
 
-    when (profileState) {
+    when (val state=profileState) {
         is ProfileUiState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -103,8 +103,10 @@ fun ProfileRoute(
 
         is ProfileUiState.Success -> {
             ProfileScreen(
-                profile = (profileState as ProfileUiState.Success).profile,
-                onEditProfile = onEditProfile
+                profile =state.profile,
+                OnNavToEditProfileScreen = {
+                    onEditProfile
+                }
             )
         }
     }
@@ -113,7 +115,7 @@ fun ProfileRoute(
 @Composable
 fun ProfileScreen(
     profile: UserProfile,
-    onEditProfile: ()->Unit
+    OnNavToEditProfileScreen: ()->Unit
 ){
 
        val profileInfo=listOf(
@@ -237,7 +239,9 @@ fun ProfileScreen(
             // Edit profile button
             item {
                 OutlinedButton(
-                    onClick = { onEditProfile()},
+                    onClick = {//navigation to edit profile screen
+                                OnNavToEditProfileScreen()
+                              },
                     modifier = Modifier
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),

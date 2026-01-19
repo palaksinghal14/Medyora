@@ -39,6 +39,22 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateProfile(
+        updatedProfile: UserProfile,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                userRepo.updateUserProfile(updatedProfile)
+                _profileState.value = ProfileUiState.Success(updatedProfile)
+                onSuccess()    // means we will perform a function after updating profile whereever updateprofile function is called
+            } catch (e: Exception) {
+                _profileState.value = ProfileUiState.Error("Failed to update profile")
+            }
+        }
+    }
+
 }
 
 sealed class ProfileUiState {
