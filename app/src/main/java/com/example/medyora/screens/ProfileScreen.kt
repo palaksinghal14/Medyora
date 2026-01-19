@@ -1,5 +1,6 @@
 package com.example.medyora.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +27,15 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.medyora.model.UserProfile
 import com.example.medyora.ui.theme.Gray100
 import com.example.medyora.ui.theme.Gray200
 import com.example.medyora.ui.theme.Gray300
@@ -52,6 +58,10 @@ import com.example.medyora.ui.theme.Gray900
 import com.example.medyora.ui.theme.Green600
 import com.example.medyora.ui.theme.Red600
 import com.example.medyora.ui.theme.White
+import com.example.medyora.viewmodels.MainUiState
+import com.example.medyora.viewmodels.ProfileUiState
+import com.example.medyora.viewmodels.ProfileViewModel
+import javax.annotation.meta.When
 
 data class ProfileInfo(
     val title: String,
@@ -61,10 +71,51 @@ data class ProfileInfo(
 
 data class ProfileInfoDetail(
     val title: String,
-    val detail: Any
+    val detail: String
 )
+
+
 @Composable
-fun ProfileScreen(){
+fun ProfileRoute(
+    onEditProfile: () -> Unit
+) {
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val profileState by viewModel.profileState.collectAsState()
+
+    when (profileState) {
+        is ProfileUiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is ProfileUiState.Error -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Failed to load profile")
+            }
+        }
+
+        is ProfileUiState.Success -> {
+            ProfileScreen(
+                profile = (profileState as ProfileUiState.Success).profile,
+                onEditProfile = onEditProfile
+            )
+        }
+    }
+}
+
+@Composable
+fun ProfileScreen(
+    profile: UserProfile,
+    onEditProfile: ()->Unit
+){
+
        val profileInfo=listOf(
            ProfileInfo(
                title="Personal Details",
@@ -72,15 +123,15 @@ fun ProfileScreen(){
                items=listOf(
                    ProfileInfoDetail(
                        title = "Age",
-                       detail=""
+                       detail=profile.age.toString()
                    ),
                    ProfileInfoDetail(
                        title = "Gender",
-                       detail=""
+                       detail=profile.gender
                    ),
                    ProfileInfoDetail(
                        title = "Contact",
-                       detail=""
+                       detail=profile.contact.toString()
                    )
                )
            ),
@@ -90,15 +141,15 @@ fun ProfileScreen(){
                items=listOf(
                    ProfileInfoDetail(
                        title = "Height",
-                       detail=""
+                       detail=profile.heightCm.toString()
                    ),
                    ProfileInfoDetail(
                        title = "Weight",
-                       detail=""
+                       detail=profile.weightKg.toString()
                    ),
                    ProfileInfoDetail(
                        title = "Activity Level",
-                       detail=""
+                       detail=profile.activityLevel.toString()
                    )
                )
            ),
@@ -153,14 +204,14 @@ fun ProfileScreen(){
                         modifier=Modifier.padding(32.dp)
                     ) {
                         Text(
-                            text = "name",
+                            text = profile.name,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Gray900
                         )
                         Spacer(modifier=Modifier.padding(16.dp) )
                         Text(
-                            text = "email",
+                            text = "",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Gray600,
@@ -178,7 +229,7 @@ fun ProfileScreen(){
             //medical details
             item {
                 MedicalDetailsCard(
-                    conditions = emptyList() // later: userProfile.conditions
+                    conditions = profile.conditions
                 )
             }
 
@@ -186,7 +237,7 @@ fun ProfileScreen(){
             // Edit profile button
             item {
                 OutlinedButton(
-                    onClick = {},
+                    onClick = { onEditProfile()},
                     modifier = Modifier
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
@@ -217,7 +268,10 @@ fun ProfileScreen(){
             }
         }
     }
+
 }
+
+
 
 @Composable
 fun  ProfileInfoCard(
@@ -350,7 +404,7 @@ fun MedicalDetailsCard(
             } else {
                 conditions.forEach { condition ->
                     Text(
-                        text = "• $condition",
+                        text = "• $condition ",
                         fontSize = 14.sp,
                         color = Gray700,
                         modifier = Modifier.padding(vertical = 4.dp)

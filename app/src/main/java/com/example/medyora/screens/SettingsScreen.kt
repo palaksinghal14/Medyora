@@ -154,7 +154,6 @@ fun SettingsScreen(
 
         )
     )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -351,6 +350,7 @@ fun SettingsScreen(
     }
 
 }
+
 
 @Composable
 fun SettingsGroupCard(group: SettingsGroup) {
