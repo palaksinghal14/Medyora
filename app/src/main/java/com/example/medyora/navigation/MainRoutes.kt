@@ -43,7 +43,9 @@ fun MainNavGraph(
         }
 
         composable(MainRoutes.SETTINGS) {
-            SettingsScreen()
+            SettingsScreen(
+                { navController.navigate("signup") }
+            )
         }
 
         composable(MainRoutes.SYMPTOM) {
