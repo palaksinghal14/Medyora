@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.medyora.ui.theme.Blue100
 import com.example.medyora.ui.theme.Blue200
 import com.example.medyora.ui.theme.Blue50
@@ -71,6 +72,7 @@ import com.example.medyora.ui.theme.Orange500
 import com.example.medyora.ui.theme.Red50
 import com.example.medyora.ui.theme.Red600
 import com.example.medyora.ui.theme.White
+import com.example.medyora.viewmodels.SettingsViewModel
 
 
 data class SettingsGroup(
@@ -86,7 +88,11 @@ data class SettingsItem(
 )
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onNavToSignInPage:() -> Unit
+) {
+
+    val settingsViewModel: SettingsViewModel= hiltViewModel()
 
     var showDialogLogOut by remember { mutableStateOf(false) }
     var showDialogDelete by remember { mutableStateOf(false) }
@@ -321,7 +327,10 @@ fun SettingsScreen() {
     if (showDialogLogOut==true){
         showDiaglog(
             onDismiss = {showDialogLogOut=false },
-            onConfirm = {},
+            onConfirm = {
+                settingsViewModel.signOut()
+                onNavToSignInPage
+            },
             description = "Are you sure you want to sign out",
             title = "SIGN OUT"
 
@@ -331,7 +340,10 @@ fun SettingsScreen() {
     if (showDialogDelete==true){
         showDiaglog(
             onDismiss = {showDialogDelete=false},
-            onConfirm = {},
+            onConfirm = {
+                settingsViewModel.deleteData()
+                onNavToSignInPage
+            },
             description = "Are you sure you want to delete your data",
             title = "DELETE ALL DATA"
 

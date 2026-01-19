@@ -33,4 +33,13 @@ class UserRepository @Inject constructor(
         return snapshot.toObject(UserProfile::class.java)
 
     }
+
+    suspend fun deleteUser(){
+        val uid=auth.currentUser?.uid?: throw IllegalStateException("user not authenticated ")
+
+        firestore.collection("users")
+            .document(uid)
+            .delete()
+            .await()
+    }
 }
