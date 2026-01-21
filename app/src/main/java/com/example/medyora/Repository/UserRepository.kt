@@ -34,13 +34,21 @@ class UserRepository @Inject constructor(
 
     }
 
-    suspend fun deleteUser(){
-        val uid=auth.currentUser?.uid?: throw IllegalStateException("user not authenticated ")
+    suspend fun deleteUserCompletely(){
+        val user = auth.currentUser ?: throw IllegalStateException("user not authenticated")
+        val uid = user.uid
 
+        // 1. Delete Firestore doc
         firestore.collection("users")
             .document(uid)
             .delete()
             .await()
+
+        // 2. Delete Firebase Auth user
+        user.delete().await()
+
+        // 3. Sign out locally
+        auth.signOut()
     }
 
     suspend fun updateUserProfile(profile: UserProfile){

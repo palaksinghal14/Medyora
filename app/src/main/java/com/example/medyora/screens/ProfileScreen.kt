@@ -77,9 +77,9 @@ data class ProfileInfoDetail(
 
 @Composable
 fun ProfileRoute(
+    viewModel: ProfileViewModel,
     onEditProfile: () -> Unit
 ) {
-    val viewModel: ProfileViewModel = hiltViewModel()
     val profileState by viewModel.profileState.collectAsState()
 
     when (val state=profileState) {
@@ -105,7 +105,7 @@ fun ProfileRoute(
             ProfileScreen(
                 profile =state.profile,
                 OnNavToEditProfileScreen = {
-                    onEditProfile
+                    onEditProfile()
                 }
             )
         }

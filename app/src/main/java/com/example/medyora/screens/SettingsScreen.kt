@@ -89,7 +89,7 @@ data class SettingsItem(
 
 @Composable
 fun SettingsScreen(
-    onNavToSignUpPage:() -> Unit
+    onNavToSplashPage:() -> Unit
 ) {
 
     val settingsViewModel: SettingsViewModel= hiltViewModel()
@@ -329,7 +329,7 @@ fun SettingsScreen(
             onDismiss = {showDialogLogOut=false },
             onConfirm = {
                 settingsViewModel.signOut()
-                onNavToSignUpPage
+                onNavToSplashPage()
             },
             description = "Are you sure you want to sign out",
             title = "SIGN OUT"
@@ -342,7 +342,7 @@ fun SettingsScreen(
             onDismiss = {showDialogDelete=false},
             onConfirm = {
                 settingsViewModel.deleteData()
-                onNavToSignUpPage
+                onNavToSplashPage()
             },
             description = "Are you sure you want to delete your data",
             title = "DELETE ALL DATA"
@@ -458,7 +458,7 @@ fun showDiaglog(
             }
         },
         dismissButton = {
-            Button(
+            OutlinedButton(
                 onClick = onDismiss,
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(1.dp, Gray900),

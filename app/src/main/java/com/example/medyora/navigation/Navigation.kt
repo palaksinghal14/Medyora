@@ -23,13 +23,19 @@ fun App() {
         composable(route = "splash") {
             SplashScreen(
                 OnNavToWelcomePage = {
-                    navController.navigate("welcome")
+                    navController.navigate("welcome"){
+                        popUpTo("splash") { inclusive = true }
+                    }
                 },
                 OnNavToMainPage = {
-                    navController.navigate("main")
+                    navController.navigate("main"){
+                        popUpTo("splash") { inclusive = true }
+                    }
                 },
                 OnNavToUserDetailsPage = {
-                    navController.navigate("userdetails")
+                    navController.navigate("userdetails"){
+                        popUpTo("splash") { inclusive = true }
+                    }
                 }
             )
         }

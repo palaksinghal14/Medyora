@@ -2,6 +2,8 @@ package com.example.medyora.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,6 +17,7 @@ import com.example.medyora.screens.SettingsScreen
 import com.example.medyora.screens.SymptomAnalysisScreen
 import com.example.medyora.screens.SymptomAnalysisScreens
 import com.example.medyora.viewmodels.MainViewModel
+import com.example.medyora.viewmodels.ProfileViewModel
 
 object MainRoutes {
     const val HOME="home"
@@ -38,16 +41,26 @@ fun MainNavGraph(
             HomeScreen(mainViewModel, navController)
         }
 
-        composable(MainRoutes.PROFILE) {
+        composable(MainRoutes.PROFILE) {backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(MainRoutes.PROFILE)
+            }
+            val viewModel: ProfileViewModel = hiltViewModel(parentEntry) // passing viewmodel here beacuse we want to use same viewoeel instance for bothe the screens , so that both stay updated with the latest data a
             ProfileRoute (
+                viewModel=viewModel,
                 onEditProfile = {
                     navController.navigate("editprofile")
                 }
             )
         }
 
-        composable("editprofile") {
+        composable("editprofile") {backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(MainRoutes.PROFILE)
+            }
+            val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
             EditProfileRoute (
+                viewModel = viewModel,
                 onBack  = {
                     navController.popBackStack()
                 }
@@ -56,7 +69,10 @@ fun MainNavGraph(
 
         composable(MainRoutes.SETTINGS) {
             SettingsScreen(
-                { navController.navigate("signup") }
+                {  navController.navigate("splash") {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                } }
             )
         }
 

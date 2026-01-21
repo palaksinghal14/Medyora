@@ -62,9 +62,9 @@ import com.example.medyora.viewmodels.ProfileViewModel
 
 @Composable
 fun EditProfileRoute(
+    viewModel: ProfileViewModel,
     onBack: () -> Unit
 ) {
-    val viewModel: ProfileViewModel = hiltViewModel()
     val profileState by viewModel.profileState.collectAsState()
 
     when (val state = profileState) {

@@ -24,7 +24,11 @@ class SettingsViewModel @Inject constructor(
     fun deleteData(){
 
         viewModelScope.launch {
-            userRepo.deleteUser()
+            try {
+                userRepo.deleteUserCompletely()
+            } catch (e: Exception) {
+                // log or handle later
+            }
         }
     }
 }

@@ -16,33 +16,38 @@ class SplashViewModel @Inject constructor(
     val userRepository: UserRepository
 ): ViewModel() {
 
+    private val _splashstate= mutableStateOf<SplashState>(SplashState.Loading)
+    val splashstate : State<SplashState> = _splashstate
     //user init because there is no button of function performed on splash screen so we immediatelt need to call this function
     init {
         decideNavigation()
     }
 
-    private val _splashstate= mutableStateOf<SplashState>(SplashState.Loading)
-    val splashstate : State<SplashState> = _splashstate
+
 
 
     fun decideNavigation(){
 
         viewModelScope.launch{
-
-            val user= authRepo.user()
-            if(user==null){
+            try {
+                val user= authRepo.user()
+                if(user==null){
+                    _splashstate.value= SplashState.GoToWelcome
+                }
+                else
+                {
+                    val profile =userRepository.getUserProfile()
+                    if(profile==null){
+                        _splashstate.value= SplashState.GoToUserDetails
+                    }
+                    else{
+                        _splashstate.value= SplashState.GoToMain
+                    }
+                }
+            }catch (e: Exception){
                 _splashstate.value= SplashState.GoToWelcome
             }
-            else
-             {
-                val profile =userRepository.getUserProfile()
-                if(profile==null){
-                    _splashstate.value= SplashState.GoToUserDetails
-                }
-                else{
-                    _splashstate.value= SplashState.GoToMain
-                }
-            }
+
         }
     }
 }
