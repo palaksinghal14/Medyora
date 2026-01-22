@@ -109,7 +109,7 @@ fun extractJson(text: String): String? {
     val end = cleaned.lastIndexOf('}')
 
     if (start == -1 || end == -1 || end <= start) {
-        return null
+      throw IllegalArgumentException("No valid json found")
     }
 
     return cleaned.substring(start, end + 1)
