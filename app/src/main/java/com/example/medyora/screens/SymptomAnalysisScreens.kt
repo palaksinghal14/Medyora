@@ -94,7 +94,7 @@ val symptomViewModel : SymptomViewModel= hiltViewModel()
         when(flowState){
             is SymptomFlowState.Idle -> SymptomInputScreen(uiState,symptomViewModel)
             is SymptomFlowState.Loading -> CircularProgressIndicator()
-            is SymptomFlowState.Error -> Text("")
+            is SymptomFlowState.Error -> Text(" failed ")
             is SymptomFlowState.Result -> SymptomResultScreen(flowState as SymptomFlowState.Result)
             is SymptomFlowState.FollowUp -> SymptomFollowUpScreen(flowState as SymptomFlowState.FollowUp,symptomViewModel)
         }
@@ -408,6 +408,8 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
 
                                 Spacer(modifier = Modifier.height(16.dp))
 
+
+                                // button
                                 Button(
                                     onClick = {
                                         viewModel.analyzeSymptom()

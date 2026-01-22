@@ -1,5 +1,6 @@
 package com.example.medyora.Repository
 
+import android.util.Log
 import com.example.medyora.Repository.PromptBuilding.buildInitialPrompt
 import com.example.medyora.Repository.PromptBuilding.buildFollowUpPrompt
 import com.example.medyora.model.SymptomAnalysis.SymptomAnalysisOutput
@@ -11,11 +12,14 @@ class SymptomAnalysisRepositoryImp(
 ) : SymptomAnalysisRepository{
 
     override suspend fun analyzeInitialResponse(request: SymptomAnalysisRequest): SymptomAnalysisOutput {
+
         val prompt= buildInitialPrompt(request)
         val aiResponse=aiService.generateResponse(prompt)
-
+        Log.d("AI_RAW", aiResponse)
         return parseInitialResponse(aiResponse)
+
     }
+
 
     override suspend fun analyzeFinalResponse(
         previousRequest: SymptomAnalysisRequest,
@@ -24,7 +28,9 @@ class SymptomAnalysisRepositoryImp(
 
         val prompt = buildFollowUpPrompt(previousRequest, followUpAnswer)
         val aiResponse = aiService.generateResponse(prompt)
+        Log.d("AI_RAW", aiResponse)
 
         return parseFinalResponse(aiResponse)
+
     }
 }

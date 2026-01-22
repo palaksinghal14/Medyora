@@ -1,5 +1,7 @@
 package com.example.medyora.Repository
 
+import android.util.Log
+
 class GeminiAiServiceImp(
      private val geminiClient : GeminiClient
 ): AiService {
@@ -8,7 +10,8 @@ class GeminiAiServiceImp(
        return try {
            geminiClient.generateContent(prompt)
        }catch (e: Exception){
-           throw RuntimeException("AI processing failed",e)
+           Log.e("GeminiAI", "Error: ${e.message}", e)
+           return "Sorry, something went wrong. Please try again."
        }
     }
 

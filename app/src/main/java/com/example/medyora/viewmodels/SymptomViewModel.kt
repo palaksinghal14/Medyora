@@ -1,5 +1,6 @@
 package com.example.medyora.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.medyora.Repository.SymptomAnalysisRepository
@@ -123,7 +124,9 @@ class SymptomViewModel @Inject constructor(
             //  AI call
 
             _flowState.value= SymptomFlowState.Loading
-            when (val result = symptomRepo.analyzeInitialResponse(request)) {
+            val result = symptomRepo.analyzeInitialResponse(request)
+            Log.d("SymptomRepo", "Repo result = $result")
+            when (result) {
                 is SymptomAnalysisOutput.RequiresFollowUp -> {
                     _flowState.value = SymptomFlowState.
                     FollowUp(

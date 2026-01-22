@@ -8,82 +8,89 @@ object PromptBuilding {
    fun buildInitialPrompt(
         request: SymptomAnalysisRequest
     ): String {
-        return """
-You are a medical assistant AI.
+       return """
+You are a medical triage AI.
 
-Analyze the following patient data and decide:
-1. Whether follow-up questions are required.
-2. If requiresFollowUp is true, ask ONE clear follow-up question.
-3.If requiresFollowUp is false, set followUpQuestion to null.
-3. If not required, provide final analysis.
+Your task is to analyze the patient data and return ONLY a valid JSON object.
+Do NOT add any explanation, text, markdown, or commentary.
+Do NOT use code fences.
+Output ONLY raw JSON.
 
+You must follow ONE of the two formats below.
+
+FORMAT 1: If follow-up is required
+
+{
+  "requiresFollowUp": true,
+  "followUpQuestion": {
+    "question": "string",
+    "options": ["string", "string"]
+  }
+}
+
+FORMAT 2: If NO follow-up is required
+
+{
+  "requiresFollowUp": false,
+  "causes": ["string", "string"],
+  "riskLevel": "LOW | MODERATE | HIGH",
+  "recommendations": ["string", "string"]
+}
 
 Patient Data:
 - Symptoms: ${request.symptomInput.description}
 - Duration: ${request.symptomInput.duration}
 - Severity: ${request.symptomInput.severity}
-- Age: ${request.userHealthProfile?.age?: "Unknown"}
-- Gender: ${request.userHealthProfile?.gender?: "Unknown"}
-- Activity Level: ${request.userHealthProfile?.activityLevel?: "Unknown"}
-- Known Conditions: ${request.userHealthProfile?.knownConditions?.joinToString()?: "Unknown"}
-
-Respond strictly in this JSON format:
-
-{
-  "requiresFollowUp": true/false,
-  "followUpQuestion": {
-     "question": "...",
-     "options": ["Yes", "No"]
-  },
-  "causes": ["...", "..."],
-  "riskLevel": "LOW | MODERATE | HIGH",
-  "recommendations": ["...", "..."]
-}
-
+- Age: ${request.userHealthProfile?.age ?: "Unknown"}
+- Gender: ${request.userHealthProfile?.gender ?: "Unknown"}
+- Activity Level: ${request.userHealthProfile?.activityLevel ?: "Unknown"}
+- Known Conditions: ${request.userHealthProfile?.knownConditions?.joinToString() ?: "Unknown"}
 
 Rules:
-- Ask follow-up ONLY if necessary
-- Do not add explanations outside JSON
--riskLevel must be exactly one of: LOW, MODERATE, HIGH
-
-"""
+- Output ONLY one JSON object
+- No text before or after JSON
+- No markdown
+- riskLevel must be exactly: LOW, MODERATE, or HIGH
+""".trimIndent()
     }
 
  fun buildFollowUpPrompt(
         request: SymptomAnalysisRequest,
         followUpAnswer: String
     ): String {
-        return """
-You are a medical assistant AI.
+     return """
+You are a medical triage AI.
 
-The user has answered the follow-up question.
+Based on the full context, return ONLY a valid JSON object.
+Do NOT add any explanation, text, markdown, or commentary.
+Do NOT use code fences.
+Output ONLY raw JSON.
 
-Follow-up answer: "$followUpAnswer"
+Output format:
 
-Based on the full context below, provide FINAL analysis.
+{
+  "causes": ["string", "string"],
+  "riskLevel": "LOW | MODERATE | HIGH",
+  "recommendations": ["string", "string"]
+}
 
 Context:
 - Symptoms: ${request.symptomInput.description}
 - Duration: ${request.symptomInput.duration}
 - Severity: ${request.symptomInput.severity}
-- Age: ${request.userHealthProfile?.age?: "Unknown"}
-- Gender: ${request.userHealthProfile?.gender?: "Unknown"}
-- Activity Level: ${request.userHealthProfile?.activityLevel?: "Unknown"}
-- Known Conditions: ${request.userHealthProfile?.knownConditions?.joinToString()?: "Unknown"}
+- Age: ${request.userHealthProfile?.age ?: "Unknown"}
+- Gender: ${request.userHealthProfile?.gender ?: "Unknown"}
+- Activity Level: ${request.userHealthProfile?.activityLevel ?: "Unknown"}
+- Known Conditions: ${request.userHealthProfile?.knownConditions?.joinToString() ?: "Unknown"}
 
-Respond strictly in this JSON format:
+Follow-up Answer:
+"$followUpAnswer"
 
-{
-  "causes": ["...", "..."],
-  "riskLevel": "LOW | MODERATE | HIGH",
-  "recommendations": ["...", "..."]
-}
- 
- rules:
-- Do not add explanations outside JSON
--riskLevel must be exactly one of: LOW, MODERATE, HIGH
-"""
-    }
+Rules:
+- Output ONLY raw JSON
+- No text outside JSON
+- riskLevel must be exactly: LOW, MODERATE, or HIGH
+""".trimIndent()
 
-
+ }
 }
