@@ -27,6 +27,8 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.MonitorHeart
+import androidx.compose.material.icons.filled.Moving
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Search
@@ -133,6 +135,7 @@ fun FoodInputScreen(
             // ✅ PROFILE CARD
             item {
                 Card(
+                    modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(8.dp)
                 ) {
@@ -248,7 +251,7 @@ fun FoodResultScreen(
                 title = {
                     Column {
                         Text("Smart Food Guide", fontWeight = FontWeight.Bold)
-                        Text("Result", fontSize = 12.sp)
+                        Text("Check any food instantly", fontSize = 12.sp)
                     }
                 },
                 navigationIcon = {
@@ -282,11 +285,11 @@ fun FoodResultScreen(
                             .padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(icon, contentDescription = null, tint = riskColor, modifier = Modifier.size(48.dp))
+                        Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(48.dp))
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Text(flowState.riskLevel.name, fontWeight = FontWeight.Bold, color = riskColor)
+                        Text(flowState.riskLevel.name, fontWeight = FontWeight.Bold, color =Color.White)
                     }
                 }
             }
@@ -309,7 +312,11 @@ fun FoodResultScreen(
             item {
                 Card(shape = RoundedCornerShape(16.dp)) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Impact on your health", fontWeight = FontWeight.Bold)
+                        Row(modifier = Modifier.padding(16.dp)) {
+                            Icon(Icons.Default.MonitorHeart, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Impact on your health", fontWeight = FontWeight.Bold)
+                        }
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -346,6 +353,12 @@ fun FoodResultScreen(
             item {
                 Card(shape = RoundedCornerShape(16.dp)) {
                     Column(modifier = Modifier.padding(16.dp)) {
+                        Row(modifier = Modifier.padding(16.dp)) {
+                            Icon(Icons.Default.Moving, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Better Alternatives", fontWeight = FontWeight.Bold)
+                        }
+
                         Text("Better Alternatives", fontWeight = FontWeight.Bold)
 
                         Spacer(modifier = Modifier.height(8.dp))
