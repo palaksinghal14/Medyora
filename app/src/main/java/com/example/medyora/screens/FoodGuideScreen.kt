@@ -75,12 +75,7 @@ fun FoodGuideScreen() {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Blue200, Blue100)
-                )
-            ),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ){
         when(flowState){
