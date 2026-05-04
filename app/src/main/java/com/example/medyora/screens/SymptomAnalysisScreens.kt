@@ -82,7 +82,6 @@ import com.example.medyora.viewmodels.SymptomViewModel
 @Composable
 fun SymptomAnalysisScreens(){
 
-
 val symptomViewModel : SymptomViewModel= hiltViewModel()
     val uiState by symptomViewModel.uiState.collectAsState()
     val flowState by symptomViewModel.flowState.collectAsState()

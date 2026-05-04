@@ -138,11 +138,6 @@ fun MainBottomBar(
 
 
 
-
-
-
-
-
 @Composable
 fun SymptomAnalysisScreen() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -150,12 +145,6 @@ fun SymptomAnalysisScreen() {
     }
 }
 
-@Composable
-fun FoodGuideScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Food Guide (Coming Next)")
-    }
-}
 /*
 
 data class BottomNavItem(
