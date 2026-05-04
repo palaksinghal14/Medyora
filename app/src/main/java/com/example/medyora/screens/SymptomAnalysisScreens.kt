@@ -481,6 +481,8 @@ fun SymptomResultScreen(
             // ✅ SUCCESS CARD
             item {
                 Card(
+                    modifier = Modifier.
+                    fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color(0xFFE8F5E9)
@@ -520,6 +522,8 @@ fun SymptomResultScreen(
             // ✅ RISK LEVEL CARD
             item {
                 Card(
+                    modifier = Modifier.
+                    fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(8.dp)
                 ) {
@@ -549,47 +553,114 @@ fun SymptomResultScreen(
             // ✅ CAUSES
             item {
                 Card(
+                    modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp)
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
+
                     Column(modifier = Modifier.padding(16.dp)) {
 
-                        Text("Possible Causes", fontWeight = FontWeight.Bold)
-                        Text("Based on your symptoms", fontSize = 12.sp)
+                        //  Highlighted Header
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFFE3F2FD)
+                            )
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(
+                                    "Possible Causes",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF0D47A1)
+                                )
+                                Text(
+                                    "Based on your symptoms",
+                                    fontSize = 12.sp,
+                                    color = Gray700
+                                )
+                            }
+                        }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                        flowState.causes.forEach {
+                        //  Each cause as separate card
+                        flowState.causes.forEach { cause ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                shape = RoundedCornerShape(10.dp)
+                                    .padding(vertical = 6.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                border = BorderStroke(1.dp, Color(0xFFBBDEFB))
                             ) {
                                 Text(
-                                    text = it,
-                                    modifier = Modifier.padding(12.dp)
+                                    text = cause,
+                                    modifier = Modifier.padding(14.dp),
+                                    fontSize = 14.sp,
+                                    color = Gray900
                                 )
                             }
                         }
                     }
                 }
             }
-
             // ✅ RECOMMENDATIONS
             item {
                 Card(
+                    modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp)
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
+
                     Column(modifier = Modifier.padding(16.dp)) {
 
-                        Text("Recommendations", fontWeight = FontWeight.Bold)
+                        //  Highlighted Header
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFFE8F5E9)
+                            )
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(
+                                    "Recommendations",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF1B5E20)
+                                )
+                                Text(
+                                    "Self-care suggestions",
+                                    fontSize = 12.sp,
+                                    color = Gray700
+                                )
+                            }
+                        }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                        flowState.recommendation.forEach {
-                            Text("• $it")
+                        //  Each recommendation as card
+                        flowState.recommendation.forEach { rec ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                border = BorderStroke(1.dp, Color(0xFFC8E6C9))
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(14.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("• ", color = Color(0xFF2E7D32))
+                                    Text(
+                                        text = rec,
+                                        fontSize = 14.sp,
+                                        color = Gray900
+                                    )
+                                }
+                            }
                         }
                     }
                 }
