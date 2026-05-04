@@ -1,5 +1,8 @@
 package com.example.medyora.Repository
 
+
+import com.example.medyora.model.FoodAnalysis.FoodAnalysisOutput
+import com.example.medyora.model.FoodAnalysis.FoodRiskLevel
 import com.example.medyora.model.SymptomAnalysis.FollowUpQuestion
 import com.example.medyora.model.SymptomAnalysis.RiskLevel
 import com.example.medyora.model.SymptomAnalysis.SymptomAnalysisOutput
@@ -93,6 +96,48 @@ fun parseFinalResponse(raw: String): SymptomAnalysisOutput{
     } catch (e: Exception) {
         SymptomAnalysisOutput.Error(
             message = "Failed to parse final AI response"
+        )
+    }
+}
+
+
+fun parseFoodAnalysisResponse(raw: String): FoodAnalysisOutput {
+    return try {
+
+        val jsonString = extractJson(raw)
+            ?: return FoodAnalysisOutput.Error("Invalid AI response (no JSON found)")
+
+        val json = JSONObject(jsonString)
+
+        val foodRisk = FoodRiskLevel.valueOf(
+            json.getString("foodRisk").trim().uppercase()
+        )
+
+        val summary = json.getString("summary")
+
+        val impactsArray = json.getJSONArray("impacts")
+        val impacts = List(impactsArray.length()) { i ->
+            impactsArray.getString(i)
+        }
+
+        val portion = json.getString("portionGuidance")
+
+        val alternativesArray = json.getJSONArray("alternatives")
+        val alternatives = List(alternativesArray.length()) { i ->
+            alternativesArray.getString(i)
+        }
+
+        return FoodAnalysisOutput.FoodResult(
+            riskLevel = foodRisk,
+            summary = summary,
+            impacts = impacts,
+            portion = portion,
+            alternatives = alternatives
+        )
+
+    } catch (e: Exception) {
+        FoodAnalysisOutput.Error(
+            "Failed to parse food analysis: ${e.message}"
         )
     }
 }
