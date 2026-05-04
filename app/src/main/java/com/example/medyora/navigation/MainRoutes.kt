@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.medyora.screens.EditProfileRoute
 import com.example.medyora.screens.FoodGuideScreen
 import com.example.medyora.screens.HomeScreen
+import com.example.medyora.screens.NearbyDoctorsScreen
 import com.example.medyora.screens.ProfileRoute
 import com.example.medyora.screens.ProfileScreen
 import com.example.medyora.screens.SettingsScreen
@@ -25,6 +26,7 @@ object MainRoutes {
     const val SETTINGS="settings"
     const val SYMPTOM="symptom"
     const val FOOD="food"
+    const val DOCTOR="doctor"
 }
 
 
@@ -82,7 +84,10 @@ fun MainNavGraph(
 
         composable(MainRoutes.FOOD) {
             FoodGuideScreen()
+        }
 
+        composable(MainRoutes.DOCTOR) {
+            NearbyDoctorsScreen()
         }
     }
 

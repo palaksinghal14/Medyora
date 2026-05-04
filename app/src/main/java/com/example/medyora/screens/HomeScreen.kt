@@ -104,7 +104,20 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
             onClick = {
                 mainNavController.navigate(MainRoutes.FOOD)
             }
-        ))
+        ),
+        MainFeature(
+            id = "nearby-doctors",
+            title = "Nearby Doctors",
+            description = "Find doctors near you",
+            icon = Icons.Default.LocationOn,
+            iconColor = Purple600,
+            backgroundColor = Purple50,
+            borderColor = Purple600.copy(alpha = 0.3f),
+            onClick = {
+                mainNavController.navigate(MainRoutes.DOCTOR)
+            }
+        )
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
