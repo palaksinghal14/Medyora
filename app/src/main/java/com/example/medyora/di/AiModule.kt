@@ -1,6 +1,8 @@
 package com.example.medyora.di
 
 import com.example.medyora.Repository.AiService
+import com.example.medyora.Repository.FoodAnalysisRepository
+import com.example.medyora.Repository.FoodAnalysisRepositoryImp
 import com.example.medyora.Repository.GeminiAiServiceImp
 import com.example.medyora.Repository.GeminiClient
 import com.example.medyora.Repository.SymptomAnalysisRepository
@@ -30,4 +32,10 @@ object AiModule {
         aiService: AiService
     ): SymptomAnalysisRepository =
         SymptomAnalysisRepositoryImp(aiService)
+
+    @Provides
+    @Singleton
+    fun  provideFoodRepository(
+        aiService: AiService
+    ): FoodAnalysisRepository= FoodAnalysisRepositoryImp(aiService)
 }

@@ -2,6 +2,7 @@
 package com.example.medyora.screens
 
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Thermostat
@@ -40,6 +42,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,13 +58,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.medyora.model.SymptomAnalysis.RiskLevel
 import com.example.medyora.model.SymptomAnalysis.SymptomDuration
 import com.example.medyora.model.SymptomAnalysis.SymptomSeverity
 import com.example.medyora.ui.theme.Blue100
 import com.example.medyora.ui.theme.Blue200
 import com.example.medyora.ui.theme.Blue50
 import com.example.medyora.ui.theme.Blue600
+import com.example.medyora.ui.theme.Gray300
+import com.example.medyora.ui.theme.Gray400
 import com.example.medyora.ui.theme.Gray600
+import com.example.medyora.ui.theme.Gray700
 import com.example.medyora.ui.theme.Gray900
 import com.example.medyora.ui.theme.Orange500
 import com.example.medyora.ui.theme.Purple600
@@ -74,7 +81,6 @@ import com.example.medyora.viewmodels.SymptomViewModel
 
 @Composable
 fun SymptomAnalysisScreens(){
-
 
 val symptomViewModel : SymptomViewModel= hiltViewModel()
     val uiState by symptomViewModel.uiState.collectAsState()
@@ -94,8 +100,10 @@ val symptomViewModel : SymptomViewModel= hiltViewModel()
         when(flowState){
             is SymptomFlowState.Idle -> SymptomInputScreen(uiState,symptomViewModel)
             is SymptomFlowState.Loading -> CircularProgressIndicator()
-            is SymptomFlowState.Error -> Text(" failed ")
-            is SymptomFlowState.Result -> SymptomResultScreen(flowState as SymptomFlowState.Result)
+            is SymptomFlowState.Error -> {
+                Text(text = (flowState as SymptomFlowState.Error).message)
+            }
+            is SymptomFlowState.Result -> SymptomResultScreen(flowState as SymptomFlowState.Result,symptomViewModel)
             is SymptomFlowState.FollowUp -> SymptomFollowUpScreen(flowState as SymptomFlowState.FollowUp,symptomViewModel)
         }
     }
@@ -222,42 +230,6 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                 }
             }
 
-            // Medical Disclaimer
-            item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    color = Blue50,
-                    border = androidx.compose.foundation.BorderStroke(2.dp, Purple600)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null,
-                            tint = Purple600,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Column {
-                            Text(
-                                text = "Medical Disclaimer",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Red50
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "This analysis is for informational purposes only and does not replace professional medical advice. Always consult with a healthcare provider for accurate diagnosis and treatment.",
-                                fontSize = 12.sp,
-                                color = Orange500,
-                                lineHeight = 18.sp
-                            )
-                        }
-                    }
-                }
-            }
 
             //input
             item {
@@ -433,35 +405,277 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
 
                 }
             }
+
+            // Medical Disclaimer
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Blue50,
+                    border = androidx.compose.foundation.BorderStroke(2.dp, Purple600)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = Purple600,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Column {
+                            Text(
+                                text = "Medical Disclaimer",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Red50
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "This analysis is for informational purposes only and does not replace professional medical advice. Always consult with a healthcare provider for accurate diagnosis and treatment.",
+                                fontSize = 12.sp,
+                                color = Orange500,
+                                lineHeight = 18.sp
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymptomResultScreen(
-    flowState: SymptomFlowState.Result
-){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text("Analysis Result", style = MaterialTheme.typography.titleMedium)
+    flowState: SymptomFlowState.Result,
+    viewModel: SymptomViewModel
+) {
 
-        Text("Causes:", style = MaterialTheme.typography.bodyLarge)
-        flowState.causes.forEach { cause -> Text("• $cause") }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Symptom Analysis", fontWeight = FontWeight.Bold)
+                },
+                navigationIcon = {
+                    IconButton(onClick = { viewModel.resetSymptomFlow() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                }
+            )
+        },
+        containerColor = Color.Transparent
+    ) { padding ->
 
-        Text("Risk Level: ${flowState.riskLevel}", style = MaterialTheme.typography.bodyLarge)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
 
-        Text("Recommendations:", style = MaterialTheme.typography.bodyLarge)
-        flowState.recommendation.forEach { rec -> Text("• $rec") }
+            // ✅ SUCCESS CARD
+            item {
+                Card(
+                    modifier = Modifier.
+                    fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFE8F5E9)
+                    ),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-        Spacer(modifier = Modifier.height(20.dp))
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = Color(0xFF2E7D32),
+                            modifier = Modifier.size(40.dp)
+                        )
 
-        Button(onClick ={}, modifier = Modifier.fillMaxWidth()) {
-            Text("Analyze Another Symptom")
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            "Analysis Complete",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF2E7D32)
+                        )
+
+                        Text(
+                            "Here's what we found based on your symptoms",
+                            fontSize = 14.sp,
+                            color = Gray700
+                        )
+                    }
+                }
+            }
+
+            // ✅ RISK LEVEL CARD
+            item {
+                Card(
+                    modifier = Modifier.
+                    fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+
+                        Text(
+                            "Severity Assessment",
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            flowState.riskLevel.name,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = when(flowState.riskLevel) {
+                                RiskLevel.LOW -> Color.Green
+                                RiskLevel.MODERATE -> Color(0xFFFFA000)
+                                RiskLevel.HIGH -> Color.Red
+                            }
+                        )
+                    }
+                }
+            }
+
+            // ✅ CAUSES
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+
+                    Column(modifier = Modifier.padding(16.dp)) {
+
+                        //  Highlighted Header
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFFE3F2FD)
+                            )
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(
+                                    "Possible Causes",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF0D47A1)
+                                )
+                                Text(
+                                    "Based on your symptoms",
+                                    fontSize = 12.sp,
+                                    color = Gray700
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        //  Each cause as separate card
+                        flowState.causes.forEach { cause ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                border = BorderStroke(1.dp, Color(0xFFBBDEFB))
+                            ) {
+                                Text(
+                                    text = cause,
+                                    modifier = Modifier.padding(14.dp),
+                                    fontSize = 14.sp,
+                                    color = Gray900
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            // ✅ RECOMMENDATIONS
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+
+                    Column(modifier = Modifier.padding(16.dp)) {
+
+                        //  Highlighted Header
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFFE8F5E9)
+                            )
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(
+                                    "Recommendations",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF1B5E20)
+                                )
+                                Text(
+                                    "Self-care suggestions",
+                                    fontSize = 12.sp,
+                                    color = Gray700
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        //  Each recommendation as card
+                        flowState.recommendation.forEach { rec ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                border = BorderStroke(1.dp, Color(0xFFC8E6C9))
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(14.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("• ", color = Color(0xFF2E7D32))
+                                    Text(
+                                        text = rec,
+                                        fontSize = 14.sp,
+                                        color = Gray900
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ✅ BUTTON
+            item {
+                Button(
+                    onClick = { viewModel.resetSymptomFlow() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Analyze Another Symptom")
+                }
+            }
         }
     }
 }
@@ -469,27 +683,92 @@ fun SymptomResultScreen(
 @Composable
 fun SymptomFollowUpScreen(
     flowState: SymptomFlowState.FollowUp,
-    viewModel: SymptomViewModel){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = "Follow-Up Question",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(flowState.question, style = MaterialTheme.typography.bodyLarge)
+    viewModel: SymptomViewModel
+) {
+    var selectedOption by remember { mutableStateOf<String?>(null) }
 
-        flowState.options?.forEach { option ->
-            Button(
-                onClick = {
-                    viewModel.submitFollowUpAnswer( option)
-                },
-                modifier = Modifier.fillMaxWidth()
+    Scaffold(
+        containerColor = Color.Transparent
+    ) { padding ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = White),
+                elevation = CardDefaults.cardElevation(10.dp)
             ) {
-                Text(option)
+
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                    Text(
+                        text = "Quick Follow-Up",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Gray900
+                    )
+
+                    Text(
+                        text = flowState.question,
+                        fontSize = 16.sp,
+                        color = Gray700
+                    )
+
+                    flowState.options?.forEach { option ->
+
+                        val isSelected = selectedOption == option
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    selectedOption = option
+                                },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isSelected) Blue200 else White
+                            ),
+                            border = BorderStroke(
+                                1.dp,
+                                if (isSelected) Blue600 else Gray300
+                            )
+                        ) {
+                            Text(
+                                text = option,
+                                modifier = Modifier.padding(16.dp),
+                                fontSize = 14.sp,
+                                color = if (isSelected) White else Gray900
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = {
+                            selectedOption?.let {
+                                viewModel.submitFollowUpAnswer(it)
+                            }
+                        },
+                        enabled = selectedOption != null,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (selectedOption != null) Blue600 else Gray400
+                        )
+                    ) {
+                        Text("Continue")
+                    }
+                }
             }
         }
     }

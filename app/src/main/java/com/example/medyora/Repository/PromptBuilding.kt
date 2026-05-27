@@ -1,5 +1,6 @@
 package com.example.medyora.Repository
 
+import com.example.medyora.model.FoodAnalysis.FoodAnalysisRequest
 import com.example.medyora.model.SymptomAnalysis.SymptomAnalysisRequest
 
 object PromptBuilding {
@@ -93,4 +94,40 @@ Rules:
 """.trimIndent()
 
  }
+
+    fun buildFoodAnalysisPrompt(
+        request: FoodAnalysisRequest
+    ): String {
+        return """
+You are a medical nutrition AI.
+
+Your task is to analyze food safety for a user based on their health profile.
+
+You must return ONLY valid JSON.
+No explanation, no markdown, no text outside JSON.
+
+OUTPUT FORMAT:
+
+{
+  "foodRisk": "SAFE | CAUTION | RISKY | UNSAFE",
+  "summary": "string (2-3 lines max)",
+  "impacts": ["string", "string"],
+  "portionGuidance": "string",
+  "alternatives": ["string", "string"]
+}
+
+INPUT DATA:
+- Food: ${request.food}
+- Age: ${request.user.age}
+- Known Conditions: ${request.user.knownConditions.joinToString()}
+
+RULES:
+- foodRisk must be EXACTLY one of: SAFE, CAUTION, RISKY, UNSAFE
+- impacts = health effects of consuming this food
+- alternatives = safer substitute foods
+- portionGuidance = clear consumption advice
+- summary = short medical-style explanation
+- STRICT JSON ONLY
+""".trimIndent()
+    }
 }
