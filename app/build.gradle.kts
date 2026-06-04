@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.medyora"
+    namespace = "com.palak.medyora"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.medyora"
+        applicationId = "com.palak.medyora"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
