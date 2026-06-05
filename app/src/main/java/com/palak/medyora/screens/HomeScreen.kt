@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.palak.medyora.navigation.MainRoutes
+import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue50
@@ -69,7 +70,9 @@ fun HomeScreen(
             }
 
             is MainUiState.Error -> {
-                Text(text = uiState.message)
+                FullScreenError(
+                    exception = uiState.message
+                )
             }
         }
 

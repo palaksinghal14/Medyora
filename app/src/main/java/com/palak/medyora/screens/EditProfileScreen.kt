@@ -46,12 +46,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palak.medyora.model.UserProfile
+import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.components.InlineError
 import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.ui.theme.Gray900
 import com.palak.medyora.ui.theme.Red600
 import com.palak.medyora.ui.theme.White
+import com.palak.medyora.utils.AppException
 import com.palak.medyora.viewmodels.ProfileUiState
 import com.palak.medyora.viewmodels.ProfileViewModel
 
@@ -83,12 +86,10 @@ fun EditProfileRoute(
         }
         }
 
-        is ProfileUiState.Error -> {   Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Failed to load profile")
-        }
+        is ProfileUiState.Error -> {
+            FullScreenError(
+                exception = state.message
+            )
         }
     }
 }
@@ -190,10 +191,8 @@ fun EditProfileScreen(
         // Error message
         if (showError) {
             item {
-                Text(
-                    text = "Please fill all mandatory fields",
-                    color = Red600,
-                    fontSize = 14.sp
+                InlineError(
+                    exception = AppException.UnknownException("Please fill all mandatory fields")
                 )
             }
         }

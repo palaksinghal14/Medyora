@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.palak.medyora.model.UserProfile
+import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue50
@@ -290,18 +291,17 @@ fun UserDetailsScreen(
     }
   when(state){
       is UserProfileState.Error -> {
-          Text(
-              text = "something wrong",
-              color = Color.Red
+          FullScreenError(
+              exception = state.msg,
+              onRetry = null
           )
       }
       is UserProfileState.Loading -> {
           CircularProgressIndicator()
       }
 
-      else ->{
-
-      }
+      UserProfileState.Idle -> {}
+      UserProfileState.Success -> {}
   }
 }
 

@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palak.medyora.model.UserProfile
+import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
@@ -80,12 +81,9 @@ fun ProfileRoute(
         }
 
         is ProfileUiState.Error -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Failed to load profile")
-            }
+            FullScreenError(
+                exception = state.message
+            )
         }
 
         is ProfileUiState.Success -> {
