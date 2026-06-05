@@ -24,30 +24,29 @@ class SplashViewModel @Inject constructor(
     }
 
 
-
-
     fun decideNavigation(){
 
         viewModelScope.launch{
-            try {
-                val user= authRepo.user()
-                if(user==null){
-                    _splashstate.value= SplashState.GoToWelcome
-                }
-                else
-                {
-                    val profile =userRepository.getUserProfile()
-                    if(profile==null){
-                        _splashstate.value= SplashState.GoToUserDetails
-                    }
-                    else{
-                        _splashstate.value= SplashState.GoToMain
-                    }
-                }
-            }catch (e: Exception){
+
+            val user= authRepo.user()
+            if(user==null){
                 _splashstate.value= SplashState.GoToWelcome
+                return@launch
             }
 
+            userRepository.getUserProfile()
+                .onSuccess { profile ->
+                    _splashstate.value = if (profile != null) {
+                        SplashState.GoToMain
+                    } else {
+                        SplashState.GoToUserDetails
+                    }
+                }
+                .onFailure {
+                    // On any error — send to welcome as safe fallback
+                    // This is intentional, not a mistake
+                    _splashstate.value = SplashState.GoToWelcome
+                }
         }
     }
 }

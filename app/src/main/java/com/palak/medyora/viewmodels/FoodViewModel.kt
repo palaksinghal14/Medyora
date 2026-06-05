@@ -60,16 +60,20 @@ class FoodViewModel @Inject constructor(
     }
 
     private suspend fun getUserHealthProfile(): UserHealthProfile? {
-        val userProfile = userRepository.getUserProfile()
+         return userRepository.getUserProfile()
+             .onFailure { e ->
+                 _uiState.value = _uiState.value.copy(error = e.toAppException())
+             }
+             .getOrNull()  // extracts UserProfile? from Result, or null if failure
+             ?.let { profile ->
+                 UserHealthProfile(
+                     age = profile.age,
+                     gender = profile.gender,
+                     activityLevel = profile.activityLevel,
+                     knownConditions = profile.conditions
+                 )
+             }
 
-        return userProfile?.let{
-            UserHealthProfile(
-                age = it.age,
-                gender = it.gender,
-                activityLevel = it.activityLevel,
-                knownConditions = it.conditions
-            )
-        }
     }
 
     private fun validateInput(food: String): Boolean {

@@ -5,6 +5,8 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.palak.medyora.Repository.UserRepository
+import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,16 +24,17 @@ class MainViewModel @Inject constructor(
 
     private fun loadUser() {
         viewModelScope.launch {
-            try {
-                val profile = userRepository.getUserProfile()
-                if (profile != null) {
-                    _uiState.value = MainUiState.Success(profile.name)
-                } else {
-                    _uiState.value = MainUiState.Error("User profile not found")
+            userRepository.getUserProfile()
+                .onSuccess { profile ->
+                    if (profile != null) {
+                        _uiState.value = MainUiState.Success(profile.name)
+                    } else {
+                        _uiState.value = MainUiState.Error(AppException.UserNotFoundException)
+                    }
                 }
-            } catch (e: Exception) {
-                _uiState.value = MainUiState.Error("Something went wrong")
-            }
+                .onFailure { e->
+                    _uiState.value = MainUiState.Error(e.toAppException())
+                }
         }
 }
 }
@@ -39,5 +42,5 @@ class MainViewModel @Inject constructor(
 sealed class MainUiState {
     object Loading : MainUiState()
     data class Success(val userName: String) : MainUiState()
-    data class Error(val message: String) : MainUiState()
+    data class Error(val message: AppException) : MainUiState()
 }

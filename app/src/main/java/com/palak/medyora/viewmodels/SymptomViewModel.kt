@@ -14,6 +14,7 @@ import com.palak.medyora.model.SymptomAnalysis.SymptomInput
 import com.palak.medyora.model.SymptomAnalysis.SymptomSeverity
 import com.palak.medyora.model.SymptomAnalysis.UserHealthProfile
 import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -68,16 +69,19 @@ class SymptomViewModel @Inject constructor(
 
     // functiom to fetch user profile and keeping only the necessary details
    private suspend fun getUserHealthProfile(): UserHealthProfile? {
-        val userProfile = userRepository.getUserProfile()
-
-        return userProfile?.let{
-            UserHealthProfile(
-                age = it.age,
-                gender = it.gender,
-                activityLevel = it.activityLevel,
-                knownConditions = it.conditions
-            )
-        }
+        return userRepository.getUserProfile()
+            .onFailure { e ->
+                _uiState.value = _uiState.value.copy(errorMessage = e.toAppException())
+            }
+            .getOrNull()  // extracts UserProfile? from Result, or null if failure
+            ?.let { profile ->
+                UserHealthProfile(
+                    age = profile.age,
+                    gender = profile.gender,
+                    activityLevel = profile.activityLevel,
+                    knownConditions = profile.conditions
+                )
+            }
     }
 
     private fun validateInput(state: SymptomInputUiState): Boolean {

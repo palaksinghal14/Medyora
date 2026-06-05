@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.palak.medyora.Repository.UserRepository
 import com.palak.medyora.model.UserProfile
+import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +20,7 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel(){
 
     private val _profileState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
-    val profileState: StateFlow<ProfileUiState> = _profileState
+    val profileState: StateFlow<ProfileUiState> = _profileState.asStateFlow()
 
     init {
         loadProfile()
@@ -25,17 +28,19 @@ class ProfileViewModel @Inject constructor(
 
     fun loadProfile() {
         viewModelScope.launch {
-            try {
-                val profile = userRepo.getUserProfile()
-                if(profile!=null){
-                    _profileState.value = ProfileUiState.Success(profile)
+            _profileState.value = ProfileUiState.Loading
+            userRepo.getUserProfile()
+                .onSuccess { profile ->
+                    if(profile!=null){
+                        _profileState.value = ProfileUiState.Success(profile)
+                    }
+                    else{
+                        _profileState.value =ProfileUiState.Error(AppException.UserNotFoundException)
+                    }
                 }
-                else{
-                    _profileState.value =ProfileUiState.Error("Profile doesn't exist")
+                .onFailure { e->
+                    _profileState.value = ProfileUiState.Error(e.toAppException())
                 }
-            } catch (e: Exception) {
-                _profileState.value = ProfileUiState.Error("Failed to load profile")
-            }
         }
     }
 
@@ -44,13 +49,14 @@ class ProfileViewModel @Inject constructor(
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            try {
-                userRepo.updateUserProfile(updatedProfile)
-                _profileState.value = ProfileUiState.Success(updatedProfile)
-                onSuccess()    // means we will perform a function after updating profile whereever updateprofile function is called
-            } catch (e: Exception) {
-                _profileState.value = ProfileUiState.Error("Failed to update profile")
-            }
+            userRepo.updateUserProfile(updatedProfile)
+                .onSuccess {
+                    _profileState.value = ProfileUiState.Success(updatedProfile)
+                    onSuccess()   // means we will perform a function after updating profile whereever updateprofile function is called
+                }
+                .onFailure { e ->
+                    _profileState.value = ProfileUiState.Error(e.toAppException())
+                }
         }
     }
 
@@ -59,5 +65,5 @@ class ProfileViewModel @Inject constructor(
 sealed class ProfileUiState {
     object Loading : ProfileUiState()
     data class Success(val profile: UserProfile) : ProfileUiState()
-    data class Error(val message: String) : ProfileUiState()
+    data class Error(val message: AppException) : ProfileUiState()
 }
