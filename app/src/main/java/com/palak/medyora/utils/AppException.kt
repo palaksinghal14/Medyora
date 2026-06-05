@@ -51,9 +51,9 @@ fun AppException.toUserMessage(): String {
         is AppException.ServerException ->
             "Server error (${this.code}). Please try again later."
         is AppException.UnknownException ->
-            "Something went wrong. Please try again."
+            "${this.originalMessage}"
         is AppException.AiUnavailableException ->
-            "AI service is currently unavailable. Please try again later"
+            "AI service could not be reached. Please check your connection and try again."
         is AppException.FirebaseUnavailableException ->
             "Service is temporarily unavailable. Please try again later"
         is AppException.PlacesApiException ->

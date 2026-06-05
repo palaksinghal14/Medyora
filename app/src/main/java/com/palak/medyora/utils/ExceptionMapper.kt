@@ -1,6 +1,7 @@
 package com.palak.medyora.utils
 
 
+import android.util.Log
 import com.google.ai.client.generativeai.type.GoogleGenerativeAIException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -8,10 +9,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.gson.JsonParseException
+import com.palak.medyora.BuildConfig
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-
+import com.google.ai.client.generativeai.type.ServerException
 // utils/ExceptionMapper.kt
 fun Throwable.toAppException(): AppException {
     return when (this) {
@@ -50,15 +52,21 @@ fun Throwable.toAppException(): AppException {
 
         // GoogleGenerativeAIException is the base exception from Gemini SDK
         // It carries a message describing what went wrong
-        is GoogleGenerativeAIException ->
-            when {
-                this.message?.contains("quota", ignoreCase = true) == true ->
-                    AppException.AiQuotaExceededException
-                this.message?.contains("unavailable", ignoreCase = true) == true ->
-                    AppException.AiUnavailableException
-                else ->
-                    AppException.AiUnavailableException
-            }
+        is GoogleGenerativeAIException -> AppException.AiUnavailableException
+
+
+       is ServerException ->
+           when {
+               this.message?.contains("429", ignoreCase = true) == true ||
+                       this.message?.contains("RESOURCE_EXHAUSTED", ignoreCase = true) == true ->
+                   AppException.AiQuotaExceededException
+               this.message?.contains("503", ignoreCase = true) == true ||
+                       this.message?.contains("unavailable", ignoreCase = true) == true ->
+                   AppException.AiUnavailableException
+               else ->
+                   AppException.AiUnavailableException
+
+           }
 
         else -> AppException.UnknownException(this.message)
     }
