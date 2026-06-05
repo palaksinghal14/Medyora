@@ -10,6 +10,8 @@ import com.palak.medyora.model.FoodAnalysis.FoodAnalysisOutput
 import com.palak.medyora.model.FoodAnalysis.FoodAnalysisRequest
 import com.palak.medyora.model.FoodAnalysis.FoodRiskLevel
 import com.palak.medyora.model.SymptomAnalysis.UserHealthProfile
+import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,13 +31,13 @@ sealed class FoodFlowState {
         val alternatives :List<String>
     ): FoodFlowState()
 
-    data class Error(val message: String) :FoodFlowState()
+    data class Error(val message: AppException) :FoodFlowState()
 }
 
 
 data class FoodInputUiState(
     val foodText: String = "",
-    val error: String? = null
+    val error: AppException? = null
 )
 
 
@@ -74,14 +76,14 @@ class FoodViewModel @Inject constructor(
         return when {
             food.isBlank() -> {
                 _uiState.value = _uiState.value.copy(
-                    error = "Please enter a food item"
+                    error = AppException.UnknownException("Please enter a food item")
                 )
                 false
             }
 
             food.length < 2 -> {
                 _uiState.value = _uiState.value.copy(
-                    error = "Food name too short"
+                    error = AppException.UnknownException("Food name too short")
                 )
                 false
             }
@@ -116,7 +118,7 @@ class FoodViewModel @Inject constructor(
              if(userProfile==null){
                  _uiState.update {
                      it.copy(
-                         error = "please fill in all user details "
+                         error = AppException.UnknownException("please fill in all user details ")
                      )
                  }
               return@launch
@@ -128,7 +130,7 @@ class FoodViewModel @Inject constructor(
              )
 
              _flowState.value= FoodFlowState.Loading
-             try {
+
                  val foodResult= foodAnalysisRepository.analyzeFood(foodRequest)
                   if (BuildConfig.DEBUG) Log.d("FoodRepo", "Repo result = ${foodResult}")
 
@@ -148,13 +150,6 @@ class FoodViewModel @Inject constructor(
                          _flowState.value = FoodFlowState.Error(foodResult.message)
                      }
                  }
-             }catch (e: Exception){
-                 _flowState.value = FoodFlowState.Error(
-                     e.message ?: "Unexpected error occurred"
-                 )
-             }
-
-
     }
 }
 }

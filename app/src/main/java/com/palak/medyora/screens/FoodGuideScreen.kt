@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.palak.medyora.model.FoodAnalysis.FoodRiskLevel
+import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.components.InlineError
 import com.palak.medyora.viewmodels.FoodFlowState
 import com.palak.medyora.viewmodels.FoodInputUiState
 import com.palak.medyora.viewmodels.FoodViewModel
@@ -76,7 +78,11 @@ fun FoodGuideScreen() {
                 foodViewModel
             )
             is FoodFlowState.Error -> {
-                Text(text = (flowState as FoodFlowState.Error).message)
+                FullScreenError(
+                    exception = (flowState as FoodFlowState.Error).message,
+                    onRetry = {foodViewModel.resetFoodFlow()}
+                )
+
             }
         }
     }
@@ -159,9 +165,13 @@ fun FoodInputScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
+                        uiState.error?.let {exception->
+                            InlineError(exception=exception)
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+
                         Button(
                             onClick = { viewModel.analyzeFood() },
-                            enabled = uiState.foodText.isNotBlank(),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Icon(Icons.Default.Search, contentDescription = null)

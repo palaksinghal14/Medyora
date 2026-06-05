@@ -7,6 +7,7 @@ import com.palak.medyora.model.SymptomAnalysis.FollowUpQuestion
 import com.palak.medyora.model.SymptomAnalysis.RiskLevel
 import com.palak.medyora.model.SymptomAnalysis.SymptomAnalysisOutput
 import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import org.json.JSONObject
 
 
@@ -105,7 +106,7 @@ fun parseFoodAnalysisResponse(raw: String): FoodAnalysisOutput {
     return try {
 
         val jsonString = extractJson(raw)
-            ?: return FoodAnalysisOutput.Error("Invalid AI response (no JSON found)")
+            ?: return FoodAnalysisOutput.Error(AppException.AiResponseParseException)
 
         val json = JSONObject(jsonString)
 
@@ -137,7 +138,7 @@ fun parseFoodAnalysisResponse(raw: String): FoodAnalysisOutput {
 
     } catch (e: Exception) {
         FoodAnalysisOutput.Error(
-            "Failed to parse food analysis: ${e.message}"
+            e.toAppException()
         )
     }
 }

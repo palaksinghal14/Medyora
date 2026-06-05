@@ -1,5 +1,7 @@
 package com.palak.medyora.model.FoodAnalysis
 
+import com.palak.medyora.utils.AppException
+
 
 sealed class FoodAnalysisOutput{
 
@@ -12,6 +14,6 @@ sealed class FoodAnalysisOutput{
     ):FoodAnalysisOutput()
 
     data class Error(
-        val message: String
+        val message: AppException
     ): FoodAnalysisOutput()
 }
