@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.palak.medyora.Repository.DoctorsRepository
 import com.palak.medyora.model.NearbyDoctors.NearbyDoctor
+import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,7 @@ sealed class NearbyDoctorsUiState {
     object Idle : NearbyDoctorsUiState()
     object Loading : NearbyDoctorsUiState()
     data class Success(val doctors: List<NearbyDoctor>) : NearbyDoctorsUiState()
-    data class Error(val message: String) : NearbyDoctorsUiState()
+    data class Error(val message: AppException) : NearbyDoctorsUiState()
     object PermissionDenied : NearbyDoctorsUiState()
 }
 
@@ -43,14 +45,11 @@ class NearbyDoctorsViewModel @Inject constructor(
 
             repository.getNearbyDoctors()
                 .onSuccess { doctors ->
-                    _uiState.value = if (doctors.isEmpty())
-                        NearbyDoctorsUiState.Error("No doctors found nearby")
-                    else
-                        NearbyDoctorsUiState.Success(doctors)
+                    _uiState.value = NearbyDoctorsUiState.Success(doctors)
                 }
                 .onFailure { error ->
                     _uiState.value = NearbyDoctorsUiState.Error(
-                        error.message ?: "Something went wrong"
+                        error.toAppException()
                     )
                 }
         }

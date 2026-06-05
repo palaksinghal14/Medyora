@@ -43,6 +43,8 @@ import com.palak.medyora.model.NearbyDoctors.NearbyDoctor
 import com.palak.medyora.viewmodels.NearbyDoctorsUiState
 import com.palak.medyora.viewmodels.NearbyDoctorsViewModel
 import androidx.compose.foundation.lazy.items
+import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.utils.AppException
 
 
 // presentation/nearbydoctors/NearbyDoctorsScreen.kt
@@ -88,10 +90,16 @@ fun NearbyDoctorsScreen(
                     DoctorList(doctors = state.doctors)
 
                 is NearbyDoctorsUiState.Error ->
-                    ErrorView(message = state.message, onRetry = viewModel::retry)
+                    FullScreenError(
+                        exception = state.message,
+                        onRetry = {viewModel.retry()}
+                    )
 
                 is NearbyDoctorsUiState.PermissionDenied ->
-                    PermissionDeniedView()
+                   FullScreenError(
+                       exception = AppException.LocationPermissionDeniedException,
+                       onRetry = null // no retry makes sense here, user needs to go to settings
+                   )
             }
         }
     }
@@ -165,23 +173,4 @@ private fun DoctorCard(doctor: NearbyDoctor) {
             }
         }
     }
-}
-
-@Composable
-private fun ErrorView(message: String, onRetry: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = message, style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(onClick = onRetry) { Text("Retry") }
-    }
-}
-
-@Composable
-private fun PermissionDeniedView() {
-    Text(
-        text = "Location permission is required to find doctors near you.",
-        style = MaterialTheme.typography.bodyMedium,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(24.dp)
-    )
 }

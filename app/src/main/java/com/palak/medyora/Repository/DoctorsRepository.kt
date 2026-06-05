@@ -3,6 +3,8 @@ package com.palak.medyora.Repository
 import com.palak.medyora.BuildConfig
 import com.palak.medyora.model.NearbyDoctors.NearbyDoctor
 import com.palak.medyora.model.NearbyDoctors.PlaceResult
+import com.palak.medyora.utils.AppException
+import com.palak.medyora.utils.toAppException
 import javax.inject.Inject
 
 // data/repository/DoctorsRepository.kt
@@ -14,7 +16,7 @@ class DoctorsRepository @Inject constructor(
     suspend fun getNearbyDoctors(): Result<List<NearbyDoctor>> {
         return try {
             val location = locationDataSource.getLastKnownLocation()
-                ?: return Result.failure(Exception("Unable to get location"))
+                ?: return Result.failure(AppException.LocationPermissionDeniedException)
 
             val locationStr = "${location.latitude},${location.longitude}"
 
@@ -24,14 +26,17 @@ class DoctorsRepository @Inject constructor(
             )
 
             if (response.status != "OK" && response.status != "ZERO_RESULTS") {
-                return Result.failure(Exception("Places API error: ${response.status}"))
+                return Result.failure(AppException.PlacesApiException)
             }
 
             val doctors = response.results.map { it.toDomain() }
+            if(doctors.isEmpty()){
+                return Result.failure(AppException.NoNearbyDoctorsException)
+            }
             Result.success(doctors)
 
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(e.toAppException())
         }
     }
 }
