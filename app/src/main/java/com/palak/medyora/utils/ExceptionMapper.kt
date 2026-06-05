@@ -1,0 +1,65 @@
+package com.palak.medyora.utils
+
+
+import com.google.ai.client.generativeai.type.GoogleGenerativeAIException
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.gson.JsonParseException
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+
+// utils/ExceptionMapper.kt
+fun Throwable.toAppException(): AppException {
+    return when (this) {
+
+        // --- Network ---
+        is UnknownHostException -> AppException.NoInternetException
+        is SocketTimeoutException -> AppException.TimeoutException
+
+        // --- Retrofit / HTTP ---
+        is HttpException -> AppException.ServerException(this.code())
+
+        // --- JSON / AI parsing ---
+        is JsonParseException -> AppException.AiResponseParseException
+
+        //--- Firebase---
+
+        // --- Firebase Auth ---
+        is FirebaseAuthInvalidUserException -> AppException.UserNotFoundException
+        is FirebaseAuthInvalidCredentialsException -> AppException.WrongPasswordException
+        is FirebaseAuthUserCollisionException -> AppException.EmailAlreadyExistsException
+        // --- Firebase Network ---
+        is FirebaseNetworkException -> AppException.FirebaseUnavailableException
+        // --- Firestore specific ---
+        is FirebaseFirestoreException -> when (this.code) {
+            FirebaseFirestoreException.Code.UNAVAILABLE ->
+                AppException.FirebaseUnavailableException
+            FirebaseFirestoreException.Code.NOT_FOUND ->
+                AppException.UserNotFoundException
+            FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                AppException.UnknownException("Permission denied. Check Firestore rules.")
+            else ->
+                AppException.UnknownException(this.message)
+        }
+
+        // --- Gemini SDK ---
+
+        // GoogleGenerativeAIException is the base exception from Gemini SDK
+        // It carries a message describing what went wrong
+        is GoogleGenerativeAIException ->
+            when {
+                this.message?.contains("quota", ignoreCase = true) == true ->
+                    AppException.AiQuotaExceededException
+                this.message?.contains("unavailable", ignoreCase = true) == true ->
+                    AppException.AiUnavailableException
+                else ->
+                    AppException.AiUnavailableException
+            }
+
+        else -> AppException.UnknownException(this.message)
+    }
+}
