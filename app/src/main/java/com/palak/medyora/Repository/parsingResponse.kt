@@ -6,6 +6,7 @@ import com.palak.medyora.model.FoodAnalysis.FoodRiskLevel
 import com.palak.medyora.model.SymptomAnalysis.FollowUpQuestion
 import com.palak.medyora.model.SymptomAnalysis.RiskLevel
 import com.palak.medyora.model.SymptomAnalysis.SymptomAnalysisOutput
+import com.palak.medyora.utils.AppException
 import org.json.JSONObject
 
 
@@ -14,7 +15,7 @@ fun parseInitialResponse(raw : String) : SymptomAnalysisOutput{
 
       // 1. Extract JSON block from AI text
       val jsonString = extractJson(raw)
-          ?: return SymptomAnalysisOutput.Error("AI did not return valid JSON")
+          ?: return SymptomAnalysisOutput.Error(AppException.AiResponseParseException)
 
       val json = JSONObject(jsonString)
 
@@ -58,7 +59,7 @@ fun parseInitialResponse(raw : String) : SymptomAnalysisOutput{
       }
   }catch (e: Exception){
     SymptomAnalysisOutput.Error(
-        "Failed to parse initial AI response: ${e.message}"
+        AppException.AiResponseParseException
     )
   }
 }
@@ -67,7 +68,7 @@ fun parseFinalResponse(raw: String): SymptomAnalysisOutput{
     return try {
 
         val jsonString = extractJson(raw)
-            ?: return SymptomAnalysisOutput.Error("AI did not return valid JSON")
+            ?: return SymptomAnalysisOutput.Error(AppException.AiResponseParseException)
 
 
         val json = JSONObject(jsonString)
@@ -94,7 +95,7 @@ fun parseFinalResponse(raw: String): SymptomAnalysisOutput{
         )
     } catch (e: Exception) {
         SymptomAnalysisOutput.Error(
-            message = "Failed to parse final AI response"
+            AppException.AiResponseParseException
         )
     }
 }

@@ -58,6 +58,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.palak.medyora.model.SymptomAnalysis.RiskLevel
 import com.palak.medyora.model.SymptomAnalysis.SymptomDuration
 import com.palak.medyora.model.SymptomAnalysis.SymptomSeverity
+import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.components.InlineError
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue50
@@ -98,7 +100,10 @@ val symptomViewModel : SymptomViewModel= hiltViewModel()
             is SymptomFlowState.Idle -> SymptomInputScreen(uiState,symptomViewModel)
             is SymptomFlowState.Loading -> CircularProgressIndicator()
             is SymptomFlowState.Error -> {
-                Text(text = (flowState as SymptomFlowState.Error).message)
+                FullScreenError(
+                    exception =(flowState as SymptomFlowState.Error).message ,
+                    onRetry = {symptomViewModel.resetSymptomFlow()}
+                )
             }
             is SymptomFlowState.Result -> SymptomResultScreen(flowState as SymptomFlowState.Result,symptomViewModel)
             is SymptomFlowState.FollowUp -> SymptomFollowUpScreen(flowState as SymptomFlowState.FollowUp,symptomViewModel)
@@ -377,6 +382,11 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
 
                                 Spacer(modifier = Modifier.height(16.dp))
 
+                                // show error if user clicks analyze button before filling the details
+                                uiState.errorMessage?.let { exception ->
+                                    InlineError(exception = exception)
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
 
                                 // button
                                 Button(

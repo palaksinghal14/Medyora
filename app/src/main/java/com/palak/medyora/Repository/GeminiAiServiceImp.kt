@@ -8,12 +8,10 @@ class GeminiAiServiceImp(
 ): AiService {
 
     override suspend fun generateResponse(prompt: String): String {
-       return try {
-           geminiClient.generateContent(prompt)
-       }catch (e: Exception){
-            if (BuildConfig.DEBUG) Log.e("GeminiAI", "Error: ${e.message}", e)
-           return "Sorry, something went wrong. Please try again."
-       }
+
+           if (BuildConfig.DEBUG) Log.e("GeminiAI", "Sending prompt to Gemini")
+           return geminiClient.generateContent(prompt)
+
     }
 
 }

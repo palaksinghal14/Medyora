@@ -13,6 +13,7 @@ import com.palak.medyora.model.SymptomAnalysis.SymptomDuration
 import com.palak.medyora.model.SymptomAnalysis.SymptomInput
 import com.palak.medyora.model.SymptomAnalysis.SymptomSeverity
 import com.palak.medyora.model.SymptomAnalysis.UserHealthProfile
+import com.palak.medyora.utils.AppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,7 @@ data class SymptomInputUiState(
     val symptomText: String = "",
     val duration: SymptomDuration? = null,
     val severity: SymptomSeverity? = null,
-    val errorMessage: String? = null
+    val errorMessage: AppException? = null
 )
 
 
@@ -92,7 +93,7 @@ class SymptomViewModel @Inject constructor(
         if (!validateInput(currentState))
         {
             _uiState.update {
-                it.copy(errorMessage = "Please fill all fields")
+                it.copy(errorMessage =  AppException.UnknownException("Please fill all fields before analyzing."))
             }
             return
         }
@@ -105,7 +106,7 @@ class SymptomViewModel @Inject constructor(
             if (healthProfile == null) {
                 _uiState.update {
                     it.copy(
-                        errorMessage = "Please complete your health profile before symptom analysis"
+                        errorMessage = AppException.UnknownException("Please complete your health profile before symptom analysis.")
                     )
                 }
                 return@launch
@@ -145,7 +146,7 @@ class SymptomViewModel @Inject constructor(
                 }
 
                 is SymptomAnalysisOutput.Error -> {
-                    _flowState.value = SymptomFlowState.Error(result.message)
+                    _flowState.value = SymptomFlowState.Error( result.message)
                 }
             }
 
@@ -161,7 +162,7 @@ class SymptomViewModel @Inject constructor(
             _flowState.value= SymptomFlowState.Loading
 
             val request = cachedRequest?:run{
-                _flowState.value= SymptomFlowState.Error("session expired")
+                _flowState.value= SymptomFlowState.Error( AppException.UnknownException("Session expired. Please start again."))
                 return@launch
             }
 
@@ -179,7 +180,9 @@ class SymptomViewModel @Inject constructor(
                 }
 
                 else -> {
-                    _flowState.value = SymptomFlowState.Error("Unexpected response")
+                    _flowState.value = SymptomFlowState.Error(
+                        AppException.UnknownException("Unexpected response from AI.")
+                    )
                 }
             }
 
@@ -209,5 +212,5 @@ sealed class SymptomFlowState {
         val recommendation: List<String>
     ) : SymptomFlowState()
 
-    data class Error(val message: String) : SymptomFlowState()
+    data class Error(val message: AppException) : SymptomFlowState()
 }
