@@ -34,12 +34,15 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,12 +57,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.ui.theme.Gray900
 import com.palak.medyora.ui.theme.Red600
 import com.palak.medyora.ui.theme.White
+import com.palak.medyora.viewmodels.SettingsUiState
 import com.palak.medyora.viewmodels.SettingsViewModel
 
 
@@ -81,9 +86,16 @@ fun SettingsScreen(
 ) {
 
     val settingsViewModel: SettingsViewModel= hiltViewModel()
+    val uiState by settingsViewModel.uiState.collectAsState()
 
     var showDialogLogOut by remember { mutableStateOf(false) }
     var showDialogDelete by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState) {
+        if(uiState is SettingsUiState.SignedOut){
+            onNavToSplashPage()
+        }
+    }
 
     val settingsGroups = listOf(
         SettingsGroup(
@@ -148,6 +160,7 @@ fun SettingsScreen(
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ){
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -215,7 +228,15 @@ fun SettingsScreen(
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
-
+                        // Show loading during delete
+                        if (uiState is SettingsUiState.Loading) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
                         OutlinedButton(
                             onClick = {
                                 showDialogDelete=true
@@ -310,14 +331,21 @@ fun SettingsScreen(
 
 
         }
+        // Show error if delete fails
+        if (uiState is SettingsUiState.Error) {
+            FullScreenError(
+                exception = (uiState as SettingsUiState.Error).exception,
+                onRetry = { settingsViewModel.deleteData() }
+            )
+        }
     }
 
     if (showDialogLogOut==true){
         showDiaglog(
             onDismiss = {showDialogLogOut=false },
             onConfirm = {
+                showDialogLogOut=false
                 settingsViewModel.signOut()
-                onNavToSplashPage()
             },
             description = "Are you sure you want to sign out",
             title = "SIGN OUT"
@@ -329,8 +357,8 @@ fun SettingsScreen(
         showDiaglog(
             onDismiss = {showDialogDelete=false},
             onConfirm = {
+                showDialogDelete=false
                 settingsViewModel.deleteData()
-                onNavToSplashPage()
             },
             description = "Are you sure you want to delete your data",
             title = "DELETE ALL DATA"
