@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.components.InlineError
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue500
@@ -50,7 +54,15 @@ fun SignUpScreen(
 
     var confirmpassword by remember{mutableStateOf("")}
 
-    var errormessage by remember{mutableStateOf<String?>("")}
+    var passwordMismatchError by remember { mutableStateOf(false) }
+
+    // Navigation — runs once when Success
+    LaunchedEffect(state) {
+        if (state is AuthViewModel.AuthState.Success) {
+            OnNavToUserDetailsPage()
+            viewmodel.resetState()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -106,8 +118,9 @@ fun SignUpScreen(
 
             // if they dont match only then we will show error
             OutlinedTextField(value = confirmpassword ,
-                onValueChange ={ confirmpassword=it
-                    errormessage=if (password!=confirmpassword)"password not match" else null},
+                onValueChange ={
+                    confirmpassword=it
+                    passwordMismatchError= password!=it},
                 label = { Text(text = "confirm password",
                     color= Gray700)},
 
@@ -119,24 +132,40 @@ fun SignUpScreen(
                     focusedTextColor = Blue500
                 ))
 
-            // if there is error show it
-            if (errormessage != null) {
-                Text(errormessage!!, color = Color.Red)
+            if (passwordMismatchError) {
+                Text(
+                    text = "Passwords do not match",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+
+            // Firebase auth error — uses AppException
+            if (state is AuthViewModel.AuthState.error) {
+                InlineError(exception = state.message)
             }
 
             Spacer(modifier = Modifier.padding(10.dp))
 
-            // only it both password matches , we will calll signup
-            Button(onClick = {
-                if(password==confirmpassword)
-                    viewmodel.SignUp(email, password)
-            },
-                colors = ButtonDefaults.buttonColors(containerColor = Blue600)
+            if (state is AuthViewModel.AuthState.Loading) {
+                CircularProgressIndicator()
+            } else {
+                // only it both password matches , we will calll signup
+                Button(
+                    onClick = {
+                        if (password == confirmpassword) {
+                            viewmodel.SignUp(email, password)
+                        } else {
+                            passwordMismatchError = true
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                 ) {
-                Text(text = "Sign Up",
-                    color = White
-                )
+                    Text(text = "Sign Up", color = White)
+                }
             }
+
 
             Spacer(modifier = Modifier.padding(10.dp))
 
@@ -156,24 +185,6 @@ fun SignUpScreen(
         }
     }
 
-
-    when (state) {
-        is AuthViewModel.AuthState.Idle -> {  }
-        is AuthViewModel.AuthState.Loading -> {
-            CircularProgressIndicator()
-        }
-        is AuthViewModel.AuthState.Success -> {
-            Text("Welcome ${state.user.email}")
-
-            OnNavToUserDetailsPage()
-        }
-        is AuthViewModel.AuthState.error -> {
-            Text(text = "error", color = Color.Red)
-        }
-
-
-    }
-
 }
 
 
@@ -190,6 +201,14 @@ fun SignInScreen  (
     var email by remember{mutableStateOf("")}
 
     var password by remember{mutableStateOf("")}
+
+    // Navigation — runs once when Success, not on every recomposition
+    LaunchedEffect(state) {
+        if (state is AuthViewModel.AuthState.Success) {
+            OnNavToMainPage()
+            viewmodel.resetState()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -243,33 +262,26 @@ fun SignInScreen  (
 
             Spacer(modifier = Modifier.padding(16.dp))
 
-            // this will call the sign in function and will pass the input
-            Button(onClick = { viewmodel.SignIn(email,password) },
-                colors = ButtonDefaults.buttonColors(containerColor = Blue600)) {
-                Text(text = "Sign In",
-                    color = White)
+
+            // Error shown inline — only for auth errors
+            if (state is AuthViewModel.AuthState.error) {
+                InlineError(exception = state.message)
+                Spacer(modifier = Modifier.padding(4.dp))
             }
 
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
 
-
-        }
-
-    }
-
-
-    when (state) {
-        is AuthViewModel.AuthState.Idle -> { /* do nothing */ }
-        is AuthViewModel.AuthState.Loading -> {
-            CircularProgressIndicator()
-        }
-        is AuthViewModel.AuthState.Success -> {
-            Text("Welcome ${state.user.email}")
-            // or navigate to HomeScreen
-            OnNavToMainPage()
-        }
-        is AuthViewModel.AuthState.error -> {
-            Text(text = "error", color = Color.Red)
+            // Loading or button
+            if (state is AuthViewModel.AuthState.Loading) {
+                CircularProgressIndicator()
+            }else{
+                // this will call the sign in function and will pass the input
+                Button(onClick = { viewmodel.SignIn(email,password) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Blue600)) {
+                    Text(text = "Sign In",
+                        color = White)
+                }
+            }
         }
     }
 }

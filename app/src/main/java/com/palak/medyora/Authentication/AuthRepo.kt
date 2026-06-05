@@ -10,24 +10,16 @@ class AuthRepo @Inject constructor(
     fun user () = auth.currentUser
 
     suspend fun SignUp( email : String , password : String) : FirebaseUser?{
-        try {
+
             var result= auth.createUserWithEmailAndPassword(email,password).await()
             return result.user
-        }
-        catch (e: Exception){
-            return null
-        }
 
     }
 
     suspend fun SignIn( email : String , password : String) : FirebaseUser?{
-        try {
+
             var result= auth.signInWithEmailAndPassword(email,password).await()
             return result.user
-        }
-        catch (e: Exception){
-            return null
-        }
 
     }
 
