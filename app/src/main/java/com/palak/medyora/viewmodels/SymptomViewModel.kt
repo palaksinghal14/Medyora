@@ -3,6 +3,7 @@ package com.palak.medyora.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.palak.medyora.BuildConfig
 import com.palak.medyora.Repository.SymptomAnalysisRepository
 import com.palak.medyora.Repository.UserRepository
 import com.palak.medyora.model.SymptomAnalysis.RiskLevel
@@ -125,7 +126,7 @@ class SymptomViewModel @Inject constructor(
 
             _flowState.value= SymptomFlowState.Loading
             val result = symptomRepo.analyzeInitialResponse(request)
-            Log.d("SymptomRepo", "Repo result = $result")
+             if (BuildConfig.DEBUG) Log.d("SymptomRepo", "Repo result = $result")
             when (result) {
                 is SymptomAnalysisOutput.RequiresFollowUp -> {
                     _flowState.value = SymptomFlowState.

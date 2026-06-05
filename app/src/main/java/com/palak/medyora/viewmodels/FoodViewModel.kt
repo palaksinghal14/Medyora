@@ -3,6 +3,7 @@ package com.palak.medyora.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.palak.medyora.BuildConfig
 import com.palak.medyora.Repository.FoodAnalysisRepository
 import com.palak.medyora.Repository.UserRepository
 import com.palak.medyora.model.FoodAnalysis.FoodAnalysisOutput
@@ -129,7 +130,7 @@ class FoodViewModel @Inject constructor(
              _flowState.value= FoodFlowState.Loading
              try {
                  val foodResult= foodAnalysisRepository.analyzeFood(foodRequest)
-                 Log.d("FoodRepo", "Repo result = ${foodResult}")
+                  if (BuildConfig.DEBUG) Log.d("FoodRepo", "Repo result = ${foodResult}")
 
                  when (foodResult) {
                      is FoodAnalysisOutput.FoodResult -> {

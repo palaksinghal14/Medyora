@@ -1,6 +1,7 @@
 package com.palak.medyora.Repository
 
 import android.util.Log
+import com.palak.medyora.BuildConfig
 import com.palak.medyora.Repository.PromptBuilding.buildInitialPrompt
 import com.palak.medyora.Repository.PromptBuilding.buildFollowUpPrompt
 import com.palak.medyora.model.SymptomAnalysis.SymptomAnalysisOutput
@@ -15,7 +16,7 @@ class SymptomAnalysisRepositoryImp(
 
         val prompt= buildInitialPrompt(request)
         val aiResponse=aiService.generateResponse(prompt)
-        Log.d("AI_RAW", aiResponse)
+         if (BuildConfig.DEBUG) Log.d("AI_RAW", aiResponse)
         return parseInitialResponse(aiResponse)
 
     }
@@ -28,7 +29,7 @@ class SymptomAnalysisRepositoryImp(
 
         val prompt = buildFollowUpPrompt(previousRequest, followUpAnswer)
         val aiResponse = aiService.generateResponse(prompt)
-        Log.d("AI_RAW", aiResponse)
+         if (BuildConfig.DEBUG) Log.d("AI_RAW", aiResponse)
 
         return parseFinalResponse(aiResponse)
 

@@ -1,6 +1,7 @@
 package com.palak.medyora.Repository
 
 import android.util.Log
+import com.palak.medyora.BuildConfig
 
 class GeminiAiServiceImp(
      private val geminiClient : GeminiClient
@@ -10,7 +11,7 @@ class GeminiAiServiceImp(
        return try {
            geminiClient.generateContent(prompt)
        }catch (e: Exception){
-           Log.e("GeminiAI", "Error: ${e.message}", e)
+            if (BuildConfig.DEBUG) Log.e("GeminiAI", "Error: ${e.message}", e)
            return "Sorry, something went wrong. Please try again."
        }
     }
