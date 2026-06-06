@@ -193,7 +193,8 @@ fun SignUpScreen(
 @Composable
 fun SignInScreen  (
     viewmodel:AuthViewModel=hiltViewModel(),
-    OnNavToMainPage:() -> Unit
+    OnNavToMainPage:() -> Unit,
+    OnNavToSignUpPage :()-> Unit
 
 ){
     val state= viewmodel.state.value
@@ -280,6 +281,22 @@ fun SignInScreen  (
                     colors = ButtonDefaults.buttonColors(containerColor = Blue600)) {
                     Text(text = "Sign In",
                         color = White)
+                }
+            }
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Create new Account ?",
+                    color= Gray600
+                )
+
+                //navigation
+                TextButton(onClick = { OnNavToSignUpPage() }) {
+                    Text(text = "Sign Up",
+                        color=Blue600)
                 }
             }
         }

@@ -50,7 +50,10 @@ fun App() {
         composable("signup") {
             SignUpScreen(
                 OnNavToSignInPage = {
-                    navController.navigate("signin")
+                    navController.navigate("signin"){
+                        popUpTo(0){inclusive=true}
+                        launchSingleTop=true
+                    }
                 },
                 OnNavToUserDetailsPage = {
                     navController.navigate("userdetails")
@@ -61,7 +64,14 @@ fun App() {
             SignInScreen(
                 OnNavToMainPage = {
                     navController.navigate("main")
+                },
+                OnNavToSignUpPage = {
+                    navController.navigate("signup"){
+                        popUpTo(0){inclusive=true}
+                        launchSingleTop=true
+                    }
                 }
+
             )
         }
         composable("userdetails") {
