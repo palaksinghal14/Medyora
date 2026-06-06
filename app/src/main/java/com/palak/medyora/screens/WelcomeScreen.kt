@@ -22,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +39,7 @@ import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray300
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray900
+import kotlinx.coroutines.launch
 
 data class IntroPage( val title: String ,val description: String)
 
@@ -67,6 +69,7 @@ fun WelcomeScreen(
     )
 
     val pagerState= rememberPagerState(pageCount = { pages.size })
+    val scope= rememberCoroutineScope()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -125,7 +128,9 @@ fun WelcomeScreen(
 
                     onClick = {
                         if(pagerState.currentPage+1!= pages.size){
-
+                            scope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage+1)
+                            }
                         }else{
                             OnNavToSignUpPage()
                         }
