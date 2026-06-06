@@ -674,6 +674,43 @@ fun SymptomResultScreen(
                 }
             }
 
+            // Medical Disclaimer
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Blue50,
+                    border = androidx.compose.foundation.BorderStroke(2.dp, Purple600)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = Purple600,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Column {
+                            Text(
+                                text = "Medical Disclaimer",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Red50
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "This analysis is for informational purposes only and does not replace professional medical advice. Always consult with a healthcare provider for accurate diagnosis and treatment.",
+                                fontSize = 12.sp,
+                                color = Orange500,
+                                lineHeight = 18.sp
+                            )
+                        }
+                    }
+                }
+            }
+
             // ✅ BUTTON
             item {
                 Button(
