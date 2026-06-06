@@ -30,6 +30,8 @@ object MainRoutes {
 fun MainNavGraph(
     mainViewModel: MainViewModel,
     navController: NavHostController,
+    onNavToSplash : ()->Unit,
+    onNavToSignIn : ()->Unit
 ) {
     NavHost(
         navController = navController,
@@ -67,10 +69,8 @@ fun MainNavGraph(
 
         composable(MainRoutes.SETTINGS) {
             SettingsScreen(
-                {  navController.navigate("splash") {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
-                } }
+                onNavToSignIn = onNavToSignIn,
+                onNavToSplashPage = onNavToSplash
             )
         }
 

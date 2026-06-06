@@ -1,8 +1,10 @@
 package com.palak.medyora.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.palak.medyora.Authentication.AuthRepo
+import com.palak.medyora.BuildConfig
 import com.palak.medyora.Repository.UserRepository
 import com.palak.medyora.utils.AppException
 import com.palak.medyora.utils.toAppException
@@ -25,8 +27,11 @@ class SettingsViewModel @Inject constructor(
     fun signOut(){
 
         viewModelScope.launch {
+            if (BuildConfig.DEBUG) Log.d("SettingsVM", "signOut() called")
             authRepo.logout()
+            if (BuildConfig.DEBUG) Log.d("SettingsVM", "logout() completed, setting SignedOut state")
             _uiState.value = SettingsUiState.SignedOut
+            if (BuildConfig.DEBUG) Log.d("SettingsVM", "uiState is now: ${_uiState.value}")
         }
     }
 
@@ -36,7 +41,7 @@ class SettingsViewModel @Inject constructor(
             _uiState.value = SettingsUiState.Loading
             userRepo.deleteUserCompletely()
                 .onSuccess {
-                    _uiState.value = SettingsUiState.SignedOut
+                    _uiState.value = SettingsUiState.AccountDelete
                 }
                 .onFailure { e ->
                     _uiState.value = SettingsUiState.Error(e.toAppException())
@@ -51,5 +56,6 @@ sealed class SettingsUiState {
     object Idle : SettingsUiState()
     object Loading : SettingsUiState()
     object SignedOut : SettingsUiState()
+    object AccountDelete : SettingsUiState()
     data class Error(val exception: AppException) : SettingsUiState()
 }

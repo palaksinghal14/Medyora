@@ -30,7 +30,10 @@ import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.viewmodels.MainViewModel
 
 @Composable
-fun MainScreen(){
+fun MainScreen(
+    onNavToSplash : ()->Unit ,
+    onNavToSignIn: () -> Unit
+){
     val mainViewModel: MainViewModel= hiltViewModel()
     val mainNavController : NavHostController =rememberNavController()
 
@@ -42,7 +45,7 @@ fun MainScreen(){
     ){
         paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)){
-            MainNavGraph(mainViewModel ,mainNavController)
+            MainNavGraph(mainViewModel ,mainNavController, onNavToSplash , onNavToSignIn)
         }
 
     }

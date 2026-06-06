@@ -73,7 +73,20 @@ fun App() {
         }
 
         composable("main") {
-            MainScreen()
+            MainScreen(
+                onNavToSplash={
+                    navController.navigate("splash"){
+                        popUpTo(0){inclusive=true}
+                        launchSingleTop=true
+                    }
+                },
+                onNavToSignIn = {
+                    navController.navigate("signin"){
+                        popUpTo(0){inclusive=true}
+                        launchSingleTop=true
+                    }
+                }
+            )
         }
     }
 }

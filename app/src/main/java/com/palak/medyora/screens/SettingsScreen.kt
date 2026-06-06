@@ -1,5 +1,6 @@
 package com.palak.medyora.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -57,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.palak.medyora.BuildConfig
 import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
@@ -82,6 +84,7 @@ data class SettingsItem(
 
 @Composable
 fun SettingsScreen(
+    onNavToSignIn:() -> Unit,
     onNavToSplashPage:() -> Unit
 ) {
 
@@ -92,8 +95,10 @@ fun SettingsScreen(
     var showDialogDelete by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState) {
-        if(uiState is SettingsUiState.SignedOut){
-            onNavToSplashPage()
+        when(uiState){
+            is SettingsUiState.SignedOut -> {onNavToSignIn()}
+            is SettingsUiState.AccountDelete -> {onNavToSplashPage()}
+            else -> Unit
         }
     }
 
