@@ -3,6 +3,7 @@ package com.palak.medyora.Repository
 import androidx.compose.ui.geometry.Rect
 import com.palak.medyora.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.palak.medyora.utils.AppException
 import com.palak.medyora.utils.toAppException
@@ -13,6 +14,11 @@ class UserRepository @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ) {
+
+
+    fun getUserEmail(): String? = auth.currentUser?.email
+
+    fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
     suspend fun saveUserProfile(profile: UserProfile): Result<Unit>{
 
@@ -89,8 +95,8 @@ class UserRepository @Inject constructor(
         }catch (e: Exception){
             Result.failure(e.toAppException())
         }
-
-
     }
+
+
 
 }

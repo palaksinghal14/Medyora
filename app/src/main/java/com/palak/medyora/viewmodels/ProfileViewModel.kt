@@ -22,8 +22,12 @@ class ProfileViewModel @Inject constructor(
     private val _profileState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
     val profileState: StateFlow<ProfileUiState> = _profileState.asStateFlow()
 
+    private val _userEmail = MutableStateFlow<String?>(null)
+    val userEmail: StateFlow<String?> = _userEmail.asStateFlow()
+
     init {
         loadProfile()
+        _userEmail.value=userRepo.getUserEmail()
     }
 
     fun loadProfile() {

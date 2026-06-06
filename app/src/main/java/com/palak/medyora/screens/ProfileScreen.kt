@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Psychology
@@ -69,6 +70,7 @@ fun ProfileRoute(
     onEditProfile: () -> Unit
 ) {
     val profileState by viewModel.profileState.collectAsState()
+    val email by viewModel.userEmail.collectAsState()
 
     when (val state=profileState) {
         is ProfileUiState.Loading -> {
@@ -89,6 +91,7 @@ fun ProfileRoute(
         is ProfileUiState.Success -> {
             ProfileScreen(
                 profile =state.profile,
+                email =email?: "",
                 OnNavToEditProfileScreen = {
                     onEditProfile()
                 }
@@ -100,10 +103,25 @@ fun ProfileRoute(
 @Composable
 fun ProfileScreen(
     profile: UserProfile,
+    email: String,
     OnNavToEditProfileScreen: ()->Unit
 ){
 
        val profileInfo=listOf(
+           ProfileInfo(
+               title=" Basic Details",
+               icon = Icons.Filled.Info,
+               items=listOf(
+                   ProfileInfoDetail(
+                       title = "Name",
+                       detail=profile.name.replaceFirstChar { it.uppercase() }
+                   ),
+                   ProfileInfoDetail(
+                       title = "Email",
+                       detail=email
+                   )
+               )
+           ),
            ProfileInfo(
                title="Personal Details",
                icon = Icons.Filled.Person,
@@ -173,41 +191,6 @@ fun ProfileScreen(
                 }
             }
 
-            //name and email card
-            item{
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp)),
-                    colors = CardDefaults.cardColors(
-                        containerColor = White
-                    ),
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = Gray900
-                    )
-                ){
-                    Column(
-                        modifier=Modifier.padding(32.dp)
-                    ) {
-                        Text(
-                            text = profile.name,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Gray900
-                        )
-                        Spacer(modifier=Modifier.padding(16.dp) )
-                        Text(
-                            text = "",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Gray600,
-                        )
-                    }
-                }
-            }
-
-
             //content
             items(profileInfo){ profile->
                 ProfileInfoCard(profile)
@@ -257,7 +240,6 @@ fun ProfileScreen(
             }
         }
     }
-
 }
 
 
