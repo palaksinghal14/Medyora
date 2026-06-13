@@ -33,6 +33,7 @@ import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray700
+import com.palak.medyora.ui.theme.White
 import com.palak.medyora.viewmodels.MainViewModel
 
 
@@ -75,7 +76,7 @@ fun MainBottomBar(
     val currentRoute= currentBackStackEntry?.destination?.route
 
    NavigationBar(
-       containerColor = Blue200
+       containerColor = White
    ) {
        NavigationBarItem(
            selected = currentRoute== MainRoutes.HOME,
