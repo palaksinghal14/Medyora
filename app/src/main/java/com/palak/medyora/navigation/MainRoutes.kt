@@ -1,7 +1,14 @@
 package com.palak.medyora.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -33,59 +40,66 @@ fun MainNavGraph(
     onNavToSplash : ()->Unit,
     onNavToSignIn : ()->Unit
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = MainRoutes.HOME
-    ) {
-        composable(MainRoutes.HOME) {
-            HomeScreen(mainViewModel, navController)
-        }
-
-        composable(MainRoutes.PROFILE) {backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(MainRoutes.PROFILE)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ){
+        NavHost(
+            navController = navController,
+            startDestination = MainRoutes.HOME
+        ) {
+            composable(MainRoutes.HOME) {
+                HomeScreen(mainViewModel, navController)
             }
-            val viewModel: ProfileViewModel = hiltViewModel(parentEntry) // passing viewmodel here beacuse we want to use same viewoeel instance for bothe the screens , so that both stay updated with the latest data a
-            ProfileRoute (
-                viewModel=viewModel,
-                onEditProfile = {
-                    navController.navigate("editprofile")
-                }
-            )
-        }
 
-        composable("editprofile") {backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(MainRoutes.PROFILE)
+            composable(MainRoutes.PROFILE) {backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(MainRoutes.PROFILE)
+                }
+                val viewModel: ProfileViewModel = hiltViewModel(parentEntry) // passing viewmodel here beacuse we want to use same viewoeel instance for bothe the screens , so that both stay updated with the latest data a
+                ProfileRoute (
+                    viewModel=viewModel,
+                    onEditProfile = {
+                        navController.navigate("editprofile")
+                    }
+                )
             }
-            val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
-            EditProfileRoute (
-                viewModel = viewModel,
-                onBack  = {
-                    navController.popBackStack()
+
+            composable("editprofile") {backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(MainRoutes.PROFILE)
                 }
-            )
-        }
+                val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
+                EditProfileRoute (
+                    viewModel = viewModel,
+                    onBack  = {
+                        navController.popBackStack()
+                    }
+                )
+            }
 
-        composable(MainRoutes.SETTINGS) {
-            SettingsScreen(
-                onNavToSignIn = onNavToSignIn,
-                onNavToSplashPage = onNavToSplash
-            )
-        }
+            composable(MainRoutes.SETTINGS) {
+                SettingsScreen(
+                    onNavToSignIn = onNavToSignIn,
+                    onNavToSplashPage = onNavToSplash
+                )
+            }
 
-        composable(MainRoutes.SYMPTOM) {
-            SymptomAnalysisScreens()
-        }
+            composable(MainRoutes.SYMPTOM) {
+                SymptomAnalysisScreens()
+            }
 
-        composable(MainRoutes.FOOD) {
-            FoodGuideScreen()
-        }
+            composable(MainRoutes.FOOD) {
+                FoodGuideScreen()
+            }
 
-        composable(MainRoutes.DOCTOR) {
-            NearbyDoctorsScreen()
+            composable(MainRoutes.DOCTOR) {
+                NearbyDoctorsScreen()
+            }
         }
     }
+
+
 
 }
 

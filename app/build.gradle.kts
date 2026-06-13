@@ -126,8 +126,8 @@ dependencies {
     // Location
     implementation("com.google.android.gms:play-services-location:21.2.0")
 
-
-
+    // app compat library
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
 
 }
