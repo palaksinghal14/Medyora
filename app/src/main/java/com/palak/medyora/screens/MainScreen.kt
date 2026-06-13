@@ -1,5 +1,7 @@
 package com.palak.medyora.screens
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +10,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -17,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,6 +35,7 @@ import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.viewmodels.MainViewModel
 
+
 @Composable
 fun MainScreen(
     onNavToSplash : ()->Unit ,
@@ -38,17 +45,25 @@ fun MainScreen(
     val mainNavController : NavHostController =rememberNavController()
 
 
-    Scaffold (
-        bottomBar = {
-            MainBottomBar(mainNavController)
-        }
-    ){
-        paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)){
-            MainNavGraph(mainViewModel ,mainNavController, onNavToSplash , onNavToSignIn)
+        Scaffold (
+            containerColor = Color.Transparent,
+            bottomBar = {
+                MainBottomBar(mainNavController)
+            }
+        ){ paddingValues ->
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = 0.dp,
+                    bottom = paddingValues.calculateBottomPadding()
+                )
+            ){
+                MainNavGraph(mainViewModel ,mainNavController, onNavToSplash , onNavToSignIn)
+            }
+
         }
 
-    }
+
 }
 
 @Composable

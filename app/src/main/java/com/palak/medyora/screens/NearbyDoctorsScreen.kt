@@ -1,6 +1,7 @@
 package com.palak.medyora.screens
 
 import android.Manifest
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -43,6 +45,8 @@ import com.palak.medyora.model.NearbyDoctors.NearbyDoctor
 import com.palak.medyora.viewmodels.NearbyDoctorsUiState
 import com.palak.medyora.viewmodels.NearbyDoctorsViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.TopAppBarDefaults.windowInsets
+
 import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.utils.AppException
 
@@ -70,8 +74,14 @@ fun NearbyDoctorsScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Nearby Doctors") })
+        modifier = Modifier.statusBarsPadding(),
+                topBar = {
+            TopAppBar(
+                title = { Text("Nearby Doctors") },
+                windowInsets = WindowInsets(0)
+            )
+
+
         }
     ) { padding ->
         Box(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,7 +47,7 @@ import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray900
 import com.palak.medyora.ui.theme.Green50
 import com.palak.medyora.ui.theme.Green600
-import com.palak.medyora.ui.theme.Purple50
+import com.palak.medyora.ui.theme.Purple100
 import com.palak.medyora.ui.theme.Purple600
 import com.palak.medyora.viewmodels.MainUiState
 import com.palak.medyora.viewmodels.MainViewModel
@@ -112,7 +113,7 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
             description = "Find doctors near you",
             icon = Icons.Default.LocationOn,
             iconColor = Purple600,
-            backgroundColor = Purple50,
+            backgroundColor = Purple100,
             borderColor = Purple600.copy(alpha = 0.3f),
             onClick = {
                 mainNavController.navigate(MainRoutes.DOCTOR)
@@ -132,7 +133,9 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .statusBarsPadding()
+                .padding(16.dp)
+               ,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Header

@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +37,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -89,11 +92,7 @@ val symptomViewModel : SymptomViewModel= hiltViewModel()
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Blue200, Blue100)
-                )
-            ),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ){
         when(flowState){
@@ -120,7 +119,9 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
     var severityExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {
+        modifier = Modifier.statusBarsPadding(),
+        contentWindowInsets = WindowInsets(0),
+                topBar = {
             Surface(
                 shadowElevation = 4.dp,
                 color = White
@@ -128,7 +129,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(8.dp),
                     verticalAlignment =
                         Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
