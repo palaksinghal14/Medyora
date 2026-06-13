@@ -2,44 +2,40 @@ package com.palak.medyora.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xAEC3AEDC)
+// ── Brand blues ────────────────────────────────────────────
+val Blue600 = Color(0xFF3A57D3)   // primary — buttons, key actions
+val Blue500 = Color(0xFF0EA5E9)   // accent
+val Blue200 = Color(0xFF9BCCE8)   // light accent, gradient end
+val Blue100 = Color(0xFFBFDBFE)   // very light blue — backgrounds
+val Blue50  = Color(0xFFEFF6FF)   // near-white blue — card backgrounds
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-
-// Primary colors - Blue theme for Medyora
-val Blue600 = Color(0xFF3A57D3)
-val Blue50 = Color(0xFFC9DDF5)
-val Blue100 = Color(0xFF43778C)
-val Blue200 = Color(0xFF9BCCE8)
-val Blue500: Color = Color(0xFF0EA5E9)
-
-// Neutral colors
-val White: Color = Color(0xFFFFFFFF)
-val Gray50 = Color(0xFFF9FAFB)
-val Gray100 = Color(0xFFF3F4F6)
-val Gray200 = Color(0xFFE5E7EB)
-val Gray300 = Color(0xFFD1D5DB)
-val Gray400 = Color(0xFF9CA3AF)
+// ── Neutrals ───────────────────────────────────────────────
+val White   = Color(0xFFFFFFFF)
+val Gray50  = Color(0xFFF8F9FA)
+val Gray100 = Color(0xFFC5C7CB)
+val Gray200 = Color(0xFFC2C2C7)
+val Gray300 = Color(0xFFB8BBBE)
+val Gray400 = Color(0xFF8F959F)
 val Gray500 = Color(0xFF6B7280)
 val Gray600 = Color(0xFF4B5563)
 val Gray700 = Color(0xFF374151)
 val Gray800 = Color(0xFF1F2937)
 val Gray900 = Color(0xFF111827)
 
-// Accent colors
-val Green600 = Color(0xFF059669)
-val Green50 = Color(0xFFACE1BC)
-val Red600: Color = Color(0xFFDC2626)
-val Red50: Color = Color(0xFF791A1A)
-val Purple600 = Color(0xFF7C3AED)
-val Purple50 = Color(0xFFAE9BC4)
-val Orange500: Color = Color(0xFFB65311)
-val Orange50: Color = Color(0xFFD29952)
-val Green100 = Color(0xFF8F9B29)
-val Yellow50 = Color(0xFFF5A84B)
+// ── Semantic colors ────────────────────────────────────────
+val Green600  = Color(0xFF059669)
+val Green100  = Color(0xFF90E1B8)   // light green background
+val Green50   = Color(0xFFCEF5E2)   // very light green
 
+val Red600    = Color(0xFFDC2626)
+val Red100    = Color(0xFFDC6666)   // light red background
+val Red50     = Color(0xFFEF9D9D)   // very light red
+
+val Orange500 = Color(0xFFF97316)
+val Orange100 = Color(0xFFF8C785)   // light orange background
+
+val Purple600 = Color(0xFF7C3AED)
+val Purple100 = Color(0xFF9A89E0)   // light purple background
+
+val Yellow500 = Color(0xFFF59E0B)
+val Yellow100 = Color(0xFFF1E5B7)   // light yellow background
