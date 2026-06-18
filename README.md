@@ -6,6 +6,13 @@ Medyora is an Android application built to integrate all essential health-relate
 
 Built as a portfolio project to demonstrate production-level Android development using modern Jetpack libraries, clean MVVM architecture, and real AI integration via the Gemini SDK.
 
+
+## 🎥 Demo Video
+
+📺 Watch the full app walkthrough:
+
+[▶ Click here to watch demo](https://youtube.com/shorts/_TuVxrASGgo)
+
 ---
 
 ## 🚀 Features
