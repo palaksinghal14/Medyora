@@ -1,5 +1,7 @@
 package com.palak.medyora.screens
 
+import android.R
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,9 +14,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -36,6 +40,9 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -47,23 +54,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.palak.medyora.model.UserProfile
 import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.components.MedyoraCard
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue50
 import com.palak.medyora.ui.theme.Blue500
 import com.palak.medyora.ui.theme.Blue600
+import com.palak.medyora.ui.theme.Gray200
+import com.palak.medyora.ui.theme.Gray300
+import com.palak.medyora.ui.theme.Gray400
 import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray700
+import com.palak.medyora.ui.theme.Gray800
 import com.palak.medyora.ui.theme.Gray900
+import com.palak.medyora.ui.theme.White
 import com.palak.medyora.viewmodels.UserProfileState
 import com.palak.medyora.viewmodels.UserViewModel
 
@@ -144,11 +160,8 @@ fun UserDetailsScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Blue200, Blue100)
-                )
-            ),
+            .background(Blue50)
+            .statusBarsPadding(),
         contentAlignment = Alignment.Center
     ){
         Column(
@@ -156,44 +169,79 @@ fun UserDetailsScreen(
                 .padding(12.dp)
                 .fillMaxSize()
                 .systemBarsPadding(),
-
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
-            ) {
+
+            // Brand mark
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Blue600, Color(0xFF5B7BF0))
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ){
                 Text(
-                    text = "Complete your profile",
+                    text = "M",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Blue600,
-
-                    )
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = "Help us personalize your experience",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Blue500,
+                    color = White
                 )
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Complete your profile",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Gray900,
 
-            LinearProgressIndicator(
-                progress = progress,
-                modifier= Modifier
-                    .fillMaxWidth(),
-                color= Gray500,
-                trackColor = Blue600
-            )
+                    )
+                Spacer(modifier = Modifier.height(4.dp))
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = "Help us personalize your experience",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Gray500,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
+                LinearProgressIndicator(
+                    progress = progress,
+                    modifier= Modifier
+                        .fillMaxWidth()
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(3.dp))
+                    ,
+                    color= Blue600,
+                    trackColor = Blue100
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                // Step label
+                Text(
+                    text = "Step $currentSection of 3",
+                    fontSize = 12.sp,
+                    color = Gray500,
+
+                )
+
+            }
+
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Section card
+             Box(
                 modifier = Modifier
                     .weight(1f)           // take remaining space between header and buttons
                     .fillMaxWidth()
@@ -234,7 +282,6 @@ fun UserDetailsScreen(
                             }
                         }
                     )
-                    else -> null
                 }
 
             }
@@ -249,18 +296,22 @@ fun UserDetailsScreen(
 
             Row(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(vertical = 16.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
+                OutlinedButton(
                     onClick = {
+                        if (currentSection > 1)
                          currentSection--
                     },
                     enabled = if(currentSection==1) false else true,
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.5.dp, if (currentSection > 1) Blue600 else Gray300),
                     colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                 ) {
-                    Text(text = "Back")
+                    Text(text = "Back",
+                        color = if (currentSection > 1) White else White)
                 }
 
                 //check if all the fields are filled and then only will move to next section
@@ -285,9 +336,13 @@ fun UserDetailsScreen(
                         }
                     },
                     enabled =isCurrentStepValid,
-                    colors = ButtonDefaults.buttonColors(containerColor = Blue600)
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Blue600,
+                        disabledContainerColor = Blue100)
                 ) {
-                    Text(text = if(currentSection!=3) "Next" else "Get Started")
+                    Text(text = if(currentSection!=3) "Next" else "Get Started",
+                        fontWeight = FontWeight.SemiBold,
+                        color = White)
                 }
             }
         }
@@ -325,52 +380,65 @@ fun PersonalDetailsCard(
     val genderOptions = listOf("Female", "Male", "Others", "Prefer not to say")
     var genderExpanded by remember { mutableStateOf(false) }
 
-
-
+// Shared field colors — define once, use everywhere
+    val fieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Blue600,
+        unfocusedBorderColor = Gray200,
+        focusedLabelColor = Blue600,
+        unfocusedLabelColor = Gray500,
+        cursorColor = Blue600,
+        focusedTextColor = Gray900,
+        unfocusedTextColor = Gray900,
+        focusedContainerColor = White,
+        unfocusedContainerColor = White
+    )
     Card(
         modifier = Modifier
-            .padding(14.dp)
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Blue200)
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = White),
+        border = BorderStroke(1.dp,Blue100),
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
+
         Column(
             modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(14.dp)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier
-                    .padding(8.dp)
+                verticalAlignment = Alignment.CenterVertically
+
             ) {
                 Icon(
                     imageVector = Icons.Filled.Person,
                     contentDescription = "",
-                    tint = Blue500
+                    tint = Blue600,
+                    modifier = Modifier.size(20.dp)
                 )
                 Text(
                     text = "Personal Details",
-                    color = Blue500
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Blue600
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = name,
                 onValueChange = NameOnChange,
                 label = {
                     Text(
-                        text = "Name  *",
-                        color = Gray700
-                    )
+                        text = "Name *")
                 },
-
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                )
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -380,19 +448,13 @@ fun PersonalDetailsCard(
                 onValueChange = AgeOnChange,
                 label = {
                     Text(
-                        text = "Age  *",
-                        color = Gray700
-                    )
+                        text = "Age  * "   )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number , imeAction = ImeAction.Done),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors
 
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -403,19 +465,13 @@ fun PersonalDetailsCard(
                 label =
                     {
                         Text(
-                            text = "DOB:dd-mm-yy  *",
-                            color = Gray700
+                            text = "Date of Birth (dd-mm-yy) *"
                         )
                     },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                )
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number,imeAction = ImeAction.Done ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -425,19 +481,13 @@ fun PersonalDetailsCard(
                 onValueChange = ContactOnChange,
                 label = {
                     Text(
-                        text = "Contact Details  *",
-                        color = Gray700
+                        text = "Contact Details  *"
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                )
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number , imeAction = ImeAction.Done),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -450,26 +500,18 @@ fun PersonalDetailsCard(
                     value = gender,
                     onValueChange = GenderOnChange,
                     label = {
-                        Text(
-                            text = "Gender  *",
-                            color = Gray700
-                        )
+                        Text(text = "Gender  *")
                     },
                     readOnly = true,
-
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Blue600,
-                        unfocusedBorderColor = Blue600,
-                        focusedLabelColor = Gray700,
-                        cursorColor = Blue100,
-                        focusedTextColor = Blue500
-                    ),
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded)
                     },
                     modifier = Modifier
                         .menuAnchor()
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = fieldColors
+
                 )
                 ExposedDropdownMenu(
                     expanded = genderExpanded,
@@ -481,7 +523,11 @@ fun PersonalDetailsCard(
                             onClick = {
                                 GenderOnChange(option)
                                 genderExpanded = false
-                            }
+                            },
+                            colors = MenuDefaults.itemColors(
+                                textColor = Blue600,
+                                disabledTextColor = Gray500
+                            )
                         )
                     }
                 }
@@ -513,42 +559,57 @@ fun PhysicalDetailsCard(
 
         var activityExpanded by remember { mutableStateOf(false) }
 
-    Card(
+        val fieldColors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Blue600,
+            unfocusedBorderColor = Gray200,
+            focusedLabelColor = Blue600,
+            unfocusedLabelColor = Gray500,
+            cursorColor = Blue600,
+            focusedTextColor = Gray900,
+            unfocusedTextColor = Gray900,
+            focusedContainerColor = White,
+            unfocusedContainerColor = White
+        )
+
+        Card(
         modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Blue200)
+            .fillMaxWidth()
+            .padding(8.dp),
+        colors = CardDefaults.cardColors(containerColor = White),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(2.dp),
+            border = BorderStroke(1.dp, Blue100)
     ) {
         Column(modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween) {
-            Row(modifier = Modifier
-                .padding(8.dp)) {
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+           ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+                ) {
                 Icon(
                     imageVector = Icons.Default.Face,
                     contentDescription = "",
-                    tint = Blue500
+                    tint = Blue600,
+                    modifier = Modifier.size(20.dp)
                 )
                 Text(text = "Physical Details",
-                    color= Blue500)
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Blue600)
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = height,
                 onValueChange = onHeightChange,
-                label = { Text("Height (cm)",
-                    color= Gray700) },
+                label = { Text("Height (cm)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                )
+                shape = RoundedCornerShape(12.dp),
+                colors =fieldColors
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -556,18 +617,11 @@ fun PhysicalDetailsCard(
             OutlinedTextField(
                 value = weight,
                 onValueChange = onWeightChange,
-                label = { Text("Weight (kg)",
-                    color= Gray700) },
+                label = { Text("Weight (kg)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                )
+                shape = RoundedCornerShape(12.dp),
+                colors =fieldColors
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -579,15 +633,9 @@ fun PhysicalDetailsCard(
                 OutlinedTextField(
                     value = activityLevel,
                     onValueChange = onActivityLevelChange,
-                    label = { Text("Lifestyle  *",
-                        color= Gray700) },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Blue600,
-                        unfocusedBorderColor = Blue600,
-                        focusedLabelColor = Gray700,
-                        cursorColor = Blue100,
-                        focusedTextColor = Blue500
-                    ),
+                    label = { Text("Lifestyle  *") },
+                    shape = RoundedCornerShape(12.dp),
+                    colors =fieldColors,
                     readOnly = true,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = activityExpanded)
@@ -606,7 +654,11 @@ fun PhysicalDetailsCard(
                             onClick = {
                                 onActivityLevelChange(option)
                                 activityExpanded = false
-                            }
+                            },
+                            colors = MenuDefaults.itemColors(
+                                textColor = Blue600,
+                                disabledTextColor = Gray500
+                            )
                         )
                     }
                 }
@@ -627,41 +679,61 @@ fun MedicalHistoryCard(
     onAddExtraCondition: () -> Unit,
 
 ) {
-
+    val fieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Blue600,
+        unfocusedBorderColor = Gray200,
+        focusedLabelColor = Blue600,
+        unfocusedLabelColor = Gray500,
+        cursorColor = Blue600,
+        focusedTextColor = Gray900,
+        unfocusedTextColor = Gray900,
+        focusedContainerColor = White,
+        unfocusedContainerColor = White
+    )
     Card(
         modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Blue200)
-    ) {
+            .fillMaxWidth()
+            .padding(8.dp),
+        colors = CardDefaults.cardColors(containerColor =  White),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(2.dp),
+        border = BorderStroke(1.dp, Blue100)
+    )
+     {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(14.dp)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+
         ) {
             Row(
-                modifier = Modifier
-                    .padding(8.dp)
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Psychology,
                     contentDescription = "",
-                    tint = Blue500
+                    tint = Blue600,
+                    modifier = Modifier.size(20.dp)
                 )
                 Text(
                     text = "Medical Details",
-                    color = Blue500
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Blue600
                 )
             }
 
+            Spacer(modifier = Modifier.height(6.dp))
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Text(
                     text = "Select your medical conditions:",
-                    fontSize = 16.sp
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Gray800
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -682,6 +754,7 @@ fun MedicalHistoryCard(
                                     selectedConditions.add(condition)
                                 }
                             },
+                            modifier = Modifier.padding(4.dp),
                             label = { Text(condition) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = Blue600,
@@ -700,29 +773,41 @@ fun MedicalHistoryCard(
                 // Extra condition input
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
                         value = extraCondition,
                         onValueChange = onExtraConditionChange,
                         label = { Text("Add other condition") },
-                        modifier = Modifier.weight(1f)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        modifier = Modifier.weight(1f).fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = fieldColors
                     )
                     IconButton(onClick = onAddExtraCondition) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add condition"
+                            contentDescription = "Add condition",
+                            tint = Blue600
                         )
                     }
                 }
 
                 if (extraConditions.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Other conditions:")
+                    Text(text = "OTHER CONDITIONS:",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Blue600)
                     Spacer(modifier = Modifier.height(4.dp))
                     Column {
                         extraConditions.forEach { condition ->
-                            Text(text = "• $condition")
+                            Text(
+                                text = "• $condition",
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 12.sp,
+                                color = Blue600)
                         }
                     }
                 }
