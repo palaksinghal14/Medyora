@@ -20,18 +20,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContactSupport
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PrivacyTip
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.ContactSupport
 import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.LibraryBooks
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PrivacyTip
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -61,6 +62,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.palak.medyora.BuildConfig
 import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.theme.Blue100
+import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
@@ -106,17 +109,17 @@ fun SettingsScreen(
     val settingsGroups = listOf(
         SettingsGroup(
             title = "Account",
-            icon=Icons.Outlined.Person,
+            icon=Icons.Filled.Person,
             items = listOf(
                 SettingsItem(
                     title = "Manage Account Details " ,
-                    iconStart = Icons.Default.Person,
+                    iconStart = Icons.Outlined.Person,
                     onClick = {}
 
                 ),
                 SettingsItem(
                     title = "Change Password" ,
-                    iconStart = Icons.Default.Shield,
+                    iconStart = Icons.Outlined.Shield,
                     onClick = {}
 
                 )
@@ -124,16 +127,16 @@ fun SettingsScreen(
         ),
         SettingsGroup(
             title="Appearance",
-            icon=Icons.Outlined.DarkMode,
+            icon=Icons.Filled.DarkMode,
             items = listOf(
                 SettingsItem(
                     title = "Dark Mode " ,
-                    iconStart = Icons.Default.DarkMode,
+                    iconStart = Icons.Outlined.DarkMode,
                     onClick = {}
                 ),
                 SettingsItem(
                     title = "language" ,
-                    iconStart = Icons.Default.Language,
+                    iconStart = Icons.Outlined.Language,
                     onClick = {}
 
                 )
@@ -143,16 +146,16 @@ fun SettingsScreen(
 
         SettingsGroup(
             title="About",
-            icon=Icons.Outlined.ContactSupport,
+            icon=Icons.Filled.ContactSupport,
             items = listOf(
                 SettingsItem(
                     title = "Privacy policy " ,
-                    iconStart = Icons.Default.PrivacyTip,
+                    iconStart = Icons.Outlined.PrivacyTip,
                     onClick = {}
                 ),
                 SettingsItem(
                     title = "terms of Service " ,
-                    iconStart = Icons.Default.LibraryBooks,
+                    iconStart = Icons.Outlined.LibraryBooks,
                     onClick = {}
 
                 )
@@ -221,7 +224,7 @@ fun SettingsScreen(
                             modifier = Modifier.padding(8.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.DeleteOutline ,
+                                imageVector = Icons.Outlined.DeleteOutline,
                                 contentDescription = "",
                                 tint = Red600,
                                 modifier = Modifier.size(18.dp)
@@ -262,7 +265,7 @@ fun SettingsScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.DeleteOutline ,
+                                    imageVector = Icons.Outlined.DeleteOutline ,
                                     contentDescription = "",
                                     tint = Red600,
                                     modifier = Modifier.size(16.dp)
@@ -301,7 +304,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                        Icon(
-                           imageVector = Icons.Default.Logout ,
+                           imageVector = Icons.Outlined.Logout ,
                            contentDescription = "",
                            tint = Red600,
                            modifier = Modifier.size(16.dp)
@@ -388,7 +391,8 @@ fun SettingsGroupCard(group: SettingsGroup) {
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = Black)
+            color = Blue100
+        )
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
@@ -402,8 +406,9 @@ fun SettingsGroupCard(group: SettingsGroup) {
                     imageVector = group.icon,
                     contentDescription = "",
                     modifier = Modifier.size(20.dp),
-                    tint = Gray700
+                    tint = Blue600
                 )
+                Spacer(modifier=Modifier.width(16.dp))
                 Text(
                     text = group.title,
                     fontWeight = FontWeight.SemiBold,
@@ -437,7 +442,7 @@ fun SettingsItemRow(item: SettingsItem) {
         Icon(
             imageVector = item.iconStart,
             contentDescription = null,
-            tint = Gray700
+            tint = Blue600
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -450,9 +455,9 @@ fun SettingsItemRow(item: SettingsItem) {
         )
 
         Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
+            imageVector = Icons.Outlined.KeyboardArrowRight,
             contentDescription = null,
-            tint = Gray500
+            tint = Blue600
         )
     }
 }
