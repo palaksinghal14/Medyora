@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -22,6 +23,9 @@ import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -44,6 +48,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palak.medyora.model.UserProfile
 import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.theme.Blue100
+import com.palak.medyora.ui.theme.Blue50
+import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
@@ -111,7 +118,7 @@ fun ProfileScreen(
        val profileInfo=listOf(
            ProfileInfo(
                title=" Basic Details",
-               icon = Icons.Filled.Info,
+               icon = Icons.Outlined.Info,
                items=listOf(
                    ProfileInfoDetail(
                        title = "Name",
@@ -125,7 +132,7 @@ fun ProfileScreen(
            ),
            ProfileInfo(
                title="Personal Details",
-               icon = Icons.Filled.Person,
+               icon = Icons.Outlined.Person,
                items=listOf(
                    ProfileInfoDetail(
                        title = "Age",
@@ -137,13 +144,13 @@ fun ProfileScreen(
                    ),
                    ProfileInfoDetail(
                        title = "Contact",
-                       detail=profile.contact.toString()
+                       detail=profile.contact
                    )
                )
            ),
            ProfileInfo(
                title="Physical Details",
-               icon=Icons.Filled.Psychology,
+               icon=Icons.Outlined.Psychology,
                items=listOf(
                    ProfileInfoDetail(
                        title = "Height",
@@ -165,7 +172,7 @@ fun ProfileScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(Blue50),
         contentAlignment = Alignment.Center
     ){
         LazyColumn(
@@ -194,8 +201,11 @@ fun ProfileScreen(
             }
 
             //content
-            items(profileInfo){ profile->
+            itemsIndexed(profileInfo){ index,profile->
                 ProfileInfoCard(profile)
+                if (index < profileInfo.lastIndex) {
+                    Divider(modifier = Modifier.padding(start = 56.dp))
+                }
             }
 
             //medical details
@@ -260,23 +270,21 @@ fun  ProfileInfoCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = Gray900)
+            color = Blue100
+        )
     ) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, top = 12.dp, bottom = 12.dp)
-                ,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = profile.icon,
                     contentDescription = "",
                     modifier = Modifier.size(20.dp),
-                    tint = Gray700
+                    tint = Blue600
                 )
 
                 Spacer(modifier=Modifier.width(16.dp))
@@ -289,9 +297,8 @@ fun  ProfileInfoCard(
                 )
             }
 
-            Divider()
+            Divider(modifier = Modifier.padding(vertical = 12.dp))
 
-            Spacer(modifier=Modifier.padding(8.dp))
 
             profile.items.forEachIndexed { index, item ->
                 ProfileItemRow(item)
@@ -315,8 +322,8 @@ fun ProfileItemRow(
            Text(
                text = item.title,
                fontSize = 16.sp,
-               fontWeight = FontWeight.Bold,
-               color = Gray700
+              // fontWeight = FontWeight.Bold,
+               color = Gray900
            )
            Text(
                text = item.detail.toString(),
@@ -337,7 +344,7 @@ fun MedicalDetailsCard(
             .clip(RoundedCornerShape(12.dp)),
         elevation = CardDefaults.cardElevation(6.dp),
         colors = CardDefaults.cardColors(containerColor = White),
-        border = BorderStroke(1.dp, Gray900)
+        border = BorderStroke(1.dp, Blue100)
     ) {
         Column(
             modifier = Modifier
@@ -347,12 +354,13 @@ fun MedicalDetailsCard(
 
             // Header
             Row(
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Filled.MedicalServices,
                     contentDescription = null,
-                    tint = Gray700,
+                    tint = Blue600,
                     modifier = Modifier.size(20.dp)
                 )
 
@@ -362,7 +370,7 @@ fun MedicalDetailsCard(
                     text = "Medical Details",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Gray900
+                    color = Blue600
                 )
             }
 
@@ -372,7 +380,7 @@ fun MedicalDetailsCard(
                 Text(
                     text = "No medical conditions added",
                     fontSize = 14.sp,
-                    color = Gray500
+                    color = Red600
                 )
             } else {
                 conditions.forEach { condition ->
