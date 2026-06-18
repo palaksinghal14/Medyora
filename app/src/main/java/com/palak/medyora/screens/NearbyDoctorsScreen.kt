@@ -4,6 +4,7 @@ import android.Manifest
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,9 +46,14 @@ import com.palak.medyora.model.NearbyDoctors.NearbyDoctor
 import com.palak.medyora.viewmodels.NearbyDoctorsUiState
 import com.palak.medyora.viewmodels.NearbyDoctorsViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults.windowInsets
+import androidx.compose.ui.unit.sp
 
 import com.palak.medyora.ui.components.FullScreenError
+import com.palak.medyora.ui.theme.Blue100
+import com.palak.medyora.ui.theme.White
 import com.palak.medyora.utils.AppException
 
 
@@ -76,10 +82,21 @@ fun NearbyDoctorsScreen(
     Scaffold(
         modifier = Modifier.statusBarsPadding(),
                 topBar = {
-            TopAppBar(
-                title = { Text("Nearby Doctors") },
-                windowInsets = WindowInsets(0)
-            )
+
+                    TopAppBar(
+                        title = {
+                            Column {
+                                Text("Nearby Doctors", fontWeight = FontWeight.Bold)
+                                Text(" See Proffessionals in your area ", fontSize = 12.sp)
+                            }
+                        },
+                        windowInsets = WindowInsets(0),
+                        navigationIcon = {
+                            IconButton(onClick = { }) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                            }
+                        }
+                    )
 
 
         }
@@ -87,7 +104,8 @@ fun NearbyDoctorsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .statusBarsPadding(),
             contentAlignment = Alignment.Center
         ) {
             when (val state = uiState) {
@@ -131,7 +149,15 @@ private fun DoctorList(doctors: List<NearbyDoctor>) {
 private fun DoctorCard(doctor: NearbyDoctor) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = White
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Blue100
+        )
+
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
