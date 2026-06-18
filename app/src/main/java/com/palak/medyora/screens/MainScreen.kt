@@ -31,6 +31,7 @@ import com.palak.medyora.navigation.MainNavGraph
 import com.palak.medyora.navigation.MainRoutes
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
+import com.palak.medyora.ui.theme.Blue50
 import com.palak.medyora.ui.theme.Blue600
 import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.ui.theme.White
@@ -47,7 +48,7 @@ fun MainScreen(
 
 
         Scaffold (
-            containerColor = Color.Transparent,
+            containerColor = Blue50,
             bottomBar = {
                 MainBottomBar(mainNavController)
             }
@@ -76,7 +77,8 @@ fun MainBottomBar(
     val currentRoute= currentBackStackEntry?.destination?.route
 
    NavigationBar(
-       containerColor = White
+       containerColor = White,
+       tonalElevation = 0.dp
    ) {
        NavigationBarItem(
            selected = currentRoute== MainRoutes.HOME,
