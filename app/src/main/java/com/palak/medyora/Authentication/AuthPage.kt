@@ -1,5 +1,6 @@
 package com.palak.medyora.Authentication
 
+import android.hardware.camera2.params.BlackLevelPattern
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,10 +9,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -27,18 +36,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.components.InlineError
+import com.palak.medyora.ui.theme.Black
 import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
+import com.palak.medyora.ui.theme.Blue50
 import com.palak.medyora.ui.theme.Blue500
 import com.palak.medyora.ui.theme.Blue600
+import com.palak.medyora.ui.theme.Gray200
+import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
+import com.palak.medyora.ui.theme.Gray800
+import com.palak.medyora.ui.theme.Gray900
 import com.palak.medyora.ui.theme.White
+import com.palak.medyora.utils.AppException
 
 @Composable
 fun SignUpScreen(
@@ -67,89 +88,157 @@ fun SignUpScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Blue200, Blue100)
-                )
-            ),
-        contentAlignment = Alignment.Center
+            .background(Blue50)
+            .statusBarsPadding(),
+   contentAlignment = Alignment.Center
     ){
-        Column( modifier= Modifier.fillMaxSize(),
+        Column(
+            modifier= Modifier
+            .fillMaxSize()
+            .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Brand mark
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Blue600, Color(0xFF5B7BF0))
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = "M",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = White
+                )
+            }
 
-            Text(text = "Sign Up",
-                fontSize =40.sp,
-                color = Blue600
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Create Account",
+                fontSize =26.sp,
+                fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            Text(
+                text = "Sign up to get started with Medyora",
+                fontSize = 14.sp,
+                color = Gray500,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
 
             OutlinedTextField(value = email ,
                 onValueChange ={email=it} ,
-                label = { Text(text = "email",
-                    color= Gray700
-                )},
-
+                label = { Text(text = "email" )},
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Blue100,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                ))
+                    unfocusedBorderColor = Gray200,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
+                    focusedContainerColor = White,
+                    unfocusedContainerColor = White
+                ),
+                )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(value = password ,
+            OutlinedTextField(
+                value = password ,
                 onValueChange ={password=it},
-                label = { Text(text = "password",
-                    color= Gray700)},
+                label = { Text(text = "Password")},
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
+                    unfocusedBorderColor = Gray200,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
+                    focusedContainerColor = White,
+                    unfocusedContainerColor = White
                 ))
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // if they dont match only then we will show error
             OutlinedTextField(value = confirmpassword ,
                 onValueChange ={
                     confirmpassword=it
                     passwordMismatchError= password!=it},
-                label = { Text(text = "confirm password",
-                    color= Gray700)},
-
+                label = { Text(text = "confirm password")},
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (password == confirmpassword) {
+                            viewmodel.SignUp(email, password)
+                        } else {
+                            passwordMismatchError = true
+                        }
+                    }
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
-                ))
+                    unfocusedBorderColor = Gray200,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
+                    focusedContainerColor = White,
+                    unfocusedContainerColor = White
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             if (passwordMismatchError) {
-                Text(
-                    text = "Passwords do not match",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
+                InlineError(
+                   exception = AppException.UnknownException("Passwords do not match")
                 )
             }
 
             // Firebase auth error — uses AppException
             if (state is AuthViewModel.AuthState.error) {
+                Spacer(modifier = Modifier.height(8.dp))
                 InlineError(exception = state.message)
             }
 
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             if (state is AuthViewModel.AuthState.Loading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = Blue600)
             } else {
                 // only it both password matches , we will calll signup
                 Button(
@@ -160,26 +249,35 @@ fun SignUpScreen(
                             passwordMismatchError = true
                         }
                     },
+                    shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                 ) {
-                    Text(text = "Sign Up", color = White)
+                    Text(
+                        text = "Create Account",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = White)
                 }
             }
 
 
-            Spacer(modifier = Modifier.padding(10.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically,
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()) {
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = "Already have an Account?",
-                    color= Gray600
+                    color= Gray600,
+                    fontSize = 14.sp
                 )
 
                 //navigation
                 TextButton(onClick = { OnNavToSignInPage() }) {
                     Text(text = "Sign In",
-                        color=Blue600)
+                        color=Blue600,
+                        fontWeight = FontWeight.SemiBold)
                 }
             }
         }
@@ -214,89 +312,146 @@ fun SignInScreen  (
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Blue200, Blue100)
-                )
-            ),
+            .background(Blue50)
+            .statusBarsPadding(),
         contentAlignment = Alignment.Center
     ){
-        Column( modifier= Modifier.fillMaxSize(),
+        Column(
+            modifier= Modifier
+                .fillMaxSize()
+                .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "Login",
-                fontSize =40.sp,
-                color = Blue600
+            // Brand mark
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Blue600, Color(0xFF5B7BF0))
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = "M",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = White
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Welcome Back",
+                fontSize =26.sp,
+                fontWeight = FontWeight.Bold,
+                color = Gray900
+            )
+            Text(
+                text = "Sign in to continue to Medyora",
+                fontSize = 14.sp,
+                color = Gray500,
+                modifier = Modifier.padding(top = 4.dp)
             )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(value = email ,
                 onValueChange ={email=it} ,
-                label = { Text(text = "email",
-                    color= Gray700)},
-
+                label = { Text(text = "email")},
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
+                    unfocusedBorderColor = Gray200,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
+                    focusedContainerColor = White,
+                    unfocusedContainerColor = White
                 ))
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(value = password ,
                 onValueChange ={password=it},
-                label = { Text(text = "password",
-                    color= Gray700)},
-
+                label = { Text(text = "password")},
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { viewmodel.SignIn(email, password) }
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Blue600,
-                    unfocusedBorderColor = Blue600,
-                    focusedLabelColor = Gray700,
-                    cursorColor = Blue100,
-                    focusedTextColor = Blue500
+                    unfocusedBorderColor = Gray200,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
+                    focusedContainerColor = White,
+                    unfocusedContainerColor = White
                 ))
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
 
             // Error shown inline — only for auth errors
             if (state is AuthViewModel.AuthState.error) {
+                Spacer(modifier = Modifier.height(8.dp))
                 InlineError(exception = state.message)
-                Spacer(modifier = Modifier.padding(4.dp))
+
             }
 
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Loading or button
             if (state is AuthViewModel.AuthState.Loading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = Blue600)
             }else{
                 // this will call the sign in function and will pass the input
                 Button(onClick = { viewmodel.SignIn(email,password) },
+                    shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Blue600)) {
                     Text(text = "Sign In",
                         color = White)
                 }
             }
 
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Create new Account ?",
-                    color= Gray600
+                Text(text = "Don't have an account?",
+                    color= Gray600,
+                    fontSize = 14.sp
                 )
 
                 //navigation
                 TextButton(onClick = { OnNavToSignUpPage() }) {
                     Text(text = "Sign Up",
-                        color=Blue600)
+                        color=Blue600,
+                        fontWeight = FontWeight.SemiBold)
                 }
             }
         }
