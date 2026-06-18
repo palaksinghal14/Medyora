@@ -11,7 +11,7 @@ Built as a portfolio project to demonstrate production-level Android development
 
 📺 Watch the full app walkthrough:
 
-[▶ Click here to watch demo](https://youtube.com/shorts/_TuVxrASGgo)
+[▶ Click here to watch demo](https://drive.google.com/file/d/1Ovx2dtCkjvKbbwoWi9EYFhflM-C0IkEQ/view?usp=drivesdk)
 
 ---
 
