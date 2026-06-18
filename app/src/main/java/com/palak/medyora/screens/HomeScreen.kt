@@ -1,19 +1,23 @@
 package com.palak.medyora.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HealthAndSafety
@@ -42,15 +46,20 @@ import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue50
 import com.palak.medyora.ui.theme.Blue600
+import com.palak.medyora.ui.theme.Gray300
 import com.palak.medyora.ui.theme.Gray400
+import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
+import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.ui.theme.Gray900
 import com.palak.medyora.ui.theme.Green50
 import com.palak.medyora.ui.theme.Green600
 import com.palak.medyora.ui.theme.Purple100
 import com.palak.medyora.ui.theme.Purple600
+import com.palak.medyora.ui.theme.White
 import com.palak.medyora.viewmodels.MainUiState
 import com.palak.medyora.viewmodels.MainViewModel
+import java.util.Calendar
 
 
 @Composable
@@ -63,7 +72,7 @@ fun HomeScreen(
 
         when (uiState) {
             is MainUiState.Loading -> {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color =Blue600)
             }
 
             is MainUiState.Success -> {
@@ -89,8 +98,8 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
             description = "Analyze your symptoms and get AI-powered health insights",
             icon = Icons.Default.HealthAndSafety,
             iconColor = Blue600,
-            backgroundColor = Blue50,
-            borderColor = Blue200,
+            backgroundColor = White,
+            borderColor = Blue100,
             onClick ={
                 mainNavController.navigate(MainRoutes.SYMPTOM)
             }
@@ -100,9 +109,9 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
             title = "Smart Food Guide",
             description = "Get personalized nutrition recommendations and meal plans",
             icon = Icons.Default.Restaurant,
-            iconColor = Green600,
-            backgroundColor = Green50,
-            borderColor = Green600.copy(alpha = 0.3f),
+            iconColor = Blue600,
+            backgroundColor = White,
+            borderColor =Blue100,
             onClick = {
                 mainNavController.navigate(MainRoutes.FOOD)
             }
@@ -110,11 +119,11 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
         MainFeature(
             id = "nearby-doctors",
             title = "Nearby Doctors",
-            description = "Find doctors near you",
+            description = "Find healthcare professionals near you ",
             icon = Icons.Default.LocationOn,
-            iconColor = Purple600,
-            backgroundColor = Purple100,
-            borderColor = Purple600.copy(alpha = 0.3f),
+            iconColor = Blue600,
+            backgroundColor = White,
+            borderColor = Blue100,
             onClick = {
                 mainNavController.navigate(MainRoutes.DOCTOR)
             }
@@ -123,72 +132,69 @@ fun HomeContent( userName: String , mainNavController: NavHostController)
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Blue200, Blue100)
-                )
-            ),
+            .background(color =Blue50),
         contentAlignment = Alignment.Center
     ){
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .padding(16.dp)
-               ,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp)
         ) {
-            // Header
+            // Greeting card — anchored visual at top
             item {
-                Column {
-                    Text(
-                        text = "Good morning, $userName!",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Gray900
-                    )
-                    Text(
-                        text = "How can I help you today?",
-                        fontSize = 16.sp,
-                        color = Gray600,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = getGreeting(),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Gray900
+                            )
+                            Text(
+                                text = userName.lowercase().replaceFirstChar { it.uppercase() } + "!",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Gray900
+                            )
+                        }
+
+                        Text(
+                            text = "How can I help you today?",
+                            fontSize = 14.sp,
+                            color = Gray500,
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
             }
 
             // Main Features
             item {
-                Column {
-                    Text(
-                        text = "Main Features",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Gray900,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        mainFeatures.forEach { feature ->
-                            MainFeatureCard(
-                                feature = feature,
-                                onClick = {
-                                    feature.onClick()
-                                }
-                            )
-                        }
-                    }
-                }
+                Text(
+                    text = "Main Features",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Gray700,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                )
+            }
+
+            items(mainFeatures) { feature ->
+                MainFeatureCard(
+                    feature = feature,
+                    onClick = { feature.onClick() }
+                )
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
         }
     }
-
 }
-
-
-
 
 data class MainFeature(
     val id: String,
@@ -202,7 +208,15 @@ data class MainFeature(
 
 )
 
-
+// Time-aware greeting
+fun getGreeting(): String {
+    val hour = Calendar.getInstance().get( Calendar.HOUR_OF_DAY)
+    return when {
+        hour < 12 -> "Good morning,"
+        hour < 17 -> "Good afternoon,"
+        else -> "Good evening,"
+    }
+}
 
 @Composable
 private fun MainFeatureCard(
@@ -213,9 +227,10 @@ private fun MainFeatureCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = feature.backgroundColor),
-        border = androidx.compose.foundation.BorderStroke(2.dp, feature.borderColor)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, feature.borderColor)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -224,15 +239,15 @@ private fun MainFeatureCard(
             // Icon
             Box(
                 modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(feature.backgroundColor),
+                    .size(52.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Blue50),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = feature.icon,
                     contentDescription = null,
-                    modifier = Modifier.size(32.dp),
+                    modifier = Modifier.size(28.dp),
                     tint = feature.iconColor
                 )
             }
@@ -246,14 +261,14 @@ private fun MainFeatureCard(
                 Text(
                     text = feature.title,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     color = Gray900
                 )
                 Text(
                     text = feature.description,
-                    fontSize = 14.sp,
-                    color = Gray600,
-                    lineHeight = 20.sp,
+                    fontSize = 13.sp,
+                    color = Gray500,
+                    lineHeight = 18.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
@@ -264,7 +279,7 @@ private fun MainFeatureCard(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = Gray400
+                tint = Gray300
             )
         }
     }
