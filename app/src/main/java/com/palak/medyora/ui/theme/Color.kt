@@ -21,6 +21,7 @@ val Gray600 = Color(0xFF4B5563)
 val Gray700 = Color(0xFF374151)
 val Gray800 = Color(0xFF1F2937)
 val Gray900 = Color(0xFF111827)
+val Black=Color(0xFF000000)
 
 // ── Semantic colors ────────────────────────────────────────
 val Green600  = Color(0xFF059669)

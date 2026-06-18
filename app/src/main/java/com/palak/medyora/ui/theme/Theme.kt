@@ -38,7 +38,8 @@ private val MedyoraColorScheme = lightColorScheme(
     error              = Red600,
     onError            = White,
     errorContainer     = Red100,
-    onErrorContainer   = Red600
+    onErrorContainer   = Red600,
+    surfaceTint = White
 
 )
 

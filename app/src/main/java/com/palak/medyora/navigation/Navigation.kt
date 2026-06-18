@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -21,14 +22,18 @@ import com.palak.medyora.screens.MainScreen
 import com.palak.medyora.screens.SplashScreen
 import com.palak.medyora.screens.UserDetailsScreen
 import com.palak.medyora.screens.WelcomeScreen
+import com.palak.medyora.ui.theme.Blue50
+import com.palak.medyora.ui.theme.Gray900
 
 @Composable
 fun App() {
     val navController = rememberNavController()
 
-    Box(
+    Surface (
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        color = Blue50,
+        contentColor = Gray900
 
     ){
         NavHost(
