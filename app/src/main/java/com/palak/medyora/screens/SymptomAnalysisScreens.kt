@@ -2,12 +2,14 @@
 package com.palak.medyora.screens
 
 
+import android.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
@@ -38,7 +41,10 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -55,6 +61,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -67,14 +75,21 @@ import com.palak.medyora.ui.theme.Blue100
 import com.palak.medyora.ui.theme.Blue200
 import com.palak.medyora.ui.theme.Blue50
 import com.palak.medyora.ui.theme.Blue600
+import com.palak.medyora.ui.theme.Gray200
 import com.palak.medyora.ui.theme.Gray300
 import com.palak.medyora.ui.theme.Gray400
+import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.ui.theme.Gray900
+import com.palak.medyora.ui.theme.Green100
+import com.palak.medyora.ui.theme.Green50
+import com.palak.medyora.ui.theme.Green600
 import com.palak.medyora.ui.theme.Orange500
 import com.palak.medyora.ui.theme.Purple600
+import com.palak.medyora.ui.theme.Red100
 import com.palak.medyora.ui.theme.Red50
+import com.palak.medyora.ui.theme.Red600
 import com.palak.medyora.ui.theme.White
 import com.palak.medyora.viewmodels.SymptomFlowState
 import com.palak.medyora.viewmodels.SymptomInputUiState
@@ -185,7 +200,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                         containerColor = White
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    border = androidx.compose.foundation.BorderStroke(2.dp, Blue200)
+                    border = BorderStroke(2.dp, Blue100)
                 ) {
                     Box(
                         modifier = Modifier
@@ -199,17 +214,13 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                 modifier = Modifier
                                     .size(48.dp)
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(
-                                        Brush.linearGradient(
-                                            colors = listOf(Blue600, Purple600)
-                                        )
-                                    ),
+                                    .background(Blue50),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Psychology,
                                     contentDescription = null,
-                                    tint = White,
+                                    tint = Blue600,
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -241,7 +252,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = White),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    border = androidx.compose.foundation.BorderStroke(2.dp, Blue200)
+                    border =BorderStroke(2.dp, Blue100)
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp)
@@ -249,12 +260,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(
-                                    Brush.linearGradient(
-                                        colors = listOf(Blue50, Blue200)
-                                    ),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
+                                .background(Blue50)
                                 .padding(12.dp)
                         ) {
                             Row(
@@ -271,7 +277,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                     text = "Detailed Description",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = Gray900
+                                    color = Blue600
                                 )
                             }
                         }
@@ -283,7 +289,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(containerColor = White),
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                            border = androidx.compose.foundation.BorderStroke(2.dp, Blue200)
+                            border = BorderStroke(2.dp, Blue100)
                         ) {
 
                             Column(
@@ -298,7 +304,22 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                     value = uiState.symptomText,
                                     onValueChange = { viewModel.onSymptomTextChange(it) },
                                     label = { Text("Symptoms") },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors= OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = Blue600,
+                                        unfocusedBorderColor = Blue100,
+                                        focusedLabelColor = Blue600,
+                                        unfocusedLabelColor = Gray500,
+                                        cursorColor = Blue600,
+                                        focusedTextColor = Gray900,
+                                        unfocusedTextColor = Gray900,
+                                        focusedContainerColor = White,
+                                        unfocusedContainerColor = White
+                                    ),
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Text,
+                                        imeAction = ImeAction.Done
+                                    )
                                 )
 
                                 // Duration Dropdown
@@ -319,7 +340,19 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                         },
                                         modifier = Modifier
                                             .menuAnchor()
-                                            .fillMaxWidth()
+                                            .fillMaxWidth(),
+
+                                        colors= OutlinedTextFieldDefaults.colors(
+                                            focusedBorderColor = Blue600,
+                                            unfocusedBorderColor = Blue100,
+                                            focusedLabelColor = Blue600,
+                                            unfocusedLabelColor = Gray500,
+                                            cursorColor = Blue600,
+                                            focusedTextColor = Gray900,
+                                            unfocusedTextColor = Gray900,
+                                            focusedContainerColor = White,
+                                            unfocusedContainerColor = White
+                                        ),
                                     )
 
                                     ExposedDropdownMenu(
@@ -334,7 +367,11 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                                 onClick = {
                                                     viewModel.onDurationSelected(d)
                                                     durationExpanded = false
-                                                }
+                                                },
+                                                colors = MenuDefaults.itemColors(
+                                                    textColor = Blue600,
+                                                    disabledTextColor = Gray500
+                                                )
                                             )
 
                                         }
@@ -359,7 +396,19 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                         },
                                         modifier = Modifier
                                             .menuAnchor()
-                                            .fillMaxWidth()
+                                            .fillMaxWidth(),
+
+                                        colors= OutlinedTextFieldDefaults.colors(
+                                            focusedBorderColor = Blue600,
+                                            unfocusedBorderColor = Blue100,
+                                            focusedLabelColor = Blue600,
+                                            unfocusedLabelColor = Gray500,
+                                            cursorColor = Blue600,
+                                            focusedTextColor = Gray900,
+                                            unfocusedTextColor = Gray900,
+                                            focusedContainerColor = White,
+                                            unfocusedContainerColor = White
+                                        ),
                                     )
 
                                     ExposedDropdownMenu(
@@ -374,7 +423,11 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                                 onClick = {
                                                     viewModel.onSeveritySelected(s)
                                                     severityExpanded = false
-                                                }
+                                                },
+                                                colors = MenuDefaults.itemColors(
+                                                    textColor = Blue600,
+                                                    disabledTextColor = Gray500
+                                                )
                                             )
 
                                         }
@@ -394,7 +447,8 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                     onClick = {
                                         viewModel.analyzeSymptom()
                                     },
-                                    colors = ButtonDefaults.buttonColors(Blue200)
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                                 ) {
 
                                     Row(horizontalArrangement = Arrangement.Center) {
@@ -404,7 +458,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                             modifier = Modifier.size(20.dp)
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Analyze Symptoms", fontSize = 16.sp)
+                                        Text("Analyze Symptoms", fontSize = 16.sp, color = White)
                                     }
                                 }
                             }
@@ -419,8 +473,8 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    color = Blue50,
-                    border = androidx.compose.foundation.BorderStroke(2.dp, Purple600)
+                    color = White,
+                    border = BorderStroke(1.dp, Red100)
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
@@ -429,7 +483,7 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = Purple600,
+                            tint = Red600,
                             modifier = Modifier.size(20.dp)
                         )
                         Column {
@@ -437,13 +491,13 @@ fun SymptomInputScreen( uiState: SymptomInputUiState, viewModel: SymptomViewMode
                                 text = "Medical Disclaimer",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Red50
+                                color = Red600
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "This analysis is for informational purposes only and does not replace professional medical advice. Always consult with a healthcare provider for accurate diagnosis and treatment.",
                                 fontSize = 12.sp,
-                                color = Orange500,
+                                color = Red600,
                                 lineHeight = 18.sp
                             )
                         }
@@ -464,17 +518,53 @@ fun SymptomResultScreen(
 ) {
 
     Scaffold(
+        modifier = Modifier.statusBarsPadding(),
+        contentWindowInsets = WindowInsets(0),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Symptom Analysis", fontWeight = FontWeight.Bold)
-                },
-                navigationIcon = {
-                    IconButton(onClick = { viewModel.resetSymptomFlow() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+            Surface(
+                shadowElevation = 4.dp,
+                color = White
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment =
+                        Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = {
+
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Gray900
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Column {
+                            Text(
+                                text = "Symptom Analysis Result",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Gray900
+                            )
+                            Text(
+                                text = "Your Personalised Health Insights",
+                                fontSize = 14.sp,
+                                color = Gray600
+                            )
+                        }
                     }
+
                 }
-            )
+            }
         },
         containerColor = Color.Transparent
     ) { padding ->
@@ -484,30 +574,31 @@ fun SymptomResultScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(vertical = 16.dp)
         ) {
 
             // ✅ SUCCESS CARD
             item {
                 Card(
-                    modifier = Modifier.
-                    fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE8F5E9)
+                        containerColor = Green50
                     ),
+                    border = BorderStroke(1.dp, Green100),
                     elevation = CardDefaults.cardElevation(8.dp)
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp),
+                        modifier = Modifier.fillMaxWidth().padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = Color(0xFF2E7D32),
-                            modifier = Modifier.size(40.dp)
+                            tint = Green600,
+                            modifier = Modifier.size(36.dp)
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -516,13 +607,14 @@ fun SymptomResultScreen(
                             "Analysis Complete",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF2E7D32)
+                            color = Green600
                         )
 
                         Text(
                             "Here's what we found based on your symptoms",
                             fontSize = 14.sp,
-                            color = Gray700
+                            color = Gray600,
+                            modifier = Modifier.padding(top = 4.dp)
                         )
                     }
                 }
@@ -531,16 +623,19 @@ fun SymptomResultScreen(
             // ✅ RISK LEVEL CARD
             item {
                 Card(
-                    modifier = Modifier.
-                    fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = White),
                     shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp)
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    border = BorderStroke(1.dp, Blue100)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
 
                         Text(
                             "Severity Assessment",
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Gray700
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -549,10 +644,10 @@ fun SymptomResultScreen(
                             flowState.riskLevel.name,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = when(flowState.riskLevel) {
-                                RiskLevel.LOW -> Color.Green
-                                RiskLevel.MODERATE -> Color(0xFFFFA000)
-                                RiskLevel.HIGH -> Color.Red
+                            color = when (flowState.riskLevel) {
+                                RiskLevel.LOW -> Green600
+                                RiskLevel.MODERATE -> Color(0xFFF59E0B)
+                                RiskLevel.HIGH -> Red600
                             }
                         )
                     }
@@ -570,23 +665,34 @@ fun SymptomResultScreen(
 
                     Column(modifier = Modifier.padding(16.dp)) {
 
-                        //  Highlighted Header
-                        Card(
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color(0xFFE3F2FD)
-                            )
-                        ) {
-                            Column(modifier = Modifier.padding(12.dp)) {
+
+                        // Header
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .background(Blue50, RoundedCornerShape(10.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null,
+                                    tint = Blue600,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
                                 Text(
-                                    "Possible Causes",
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF0D47A1)
+                                    text = "Possible Causes",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Gray900
                                 )
                                 Text(
-                                    "Based on your symptoms",
+                                    text = "Based on your symptoms",
                                     fontSize = 12.sp,
-                                    color = Gray700
+                                    color = Gray500
                                 )
                             }
                         }
@@ -598,14 +704,14 @@ fun SymptomResultScreen(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                shape = RoundedCornerShape(12.dp),
+                                    .padding(vertical = 4.dp),
+                                shape = RoundedCornerShape(10.dp),
                                 elevation = CardDefaults.cardElevation(4.dp),
-                                border = BorderStroke(1.dp, Color(0xFFBBDEFB))
+                                border = BorderStroke(1.dp, Blue50)
                             ) {
                                 Text(
                                     text = cause,
-                                    modifier = Modifier.padding(14.dp),
+                                    modifier = Modifier.padding(12.dp),
                                     fontSize = 14.sp,
                                     color = Gray900
                                 )
@@ -620,10 +726,12 @@ fun SymptomResultScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = White),
+                    border = BorderStroke(1.dp, Blue100)
                 ) {
 
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(16.dp))
+                    {
 
                         //  Highlighted Header
                         Card(
@@ -631,57 +739,90 @@ fun SymptomResultScreen(
                             colors = CardDefaults.cardColors(
                                 containerColor = Color(0xFFE8F5E9)
                             )
-                        ) {
-                            Column(modifier = Modifier.padding(12.dp)) {
-                                Text(
-                                    "Recommendations",
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF1B5E20)
-                                )
-                                Text(
-                                    "Self-care suggestions",
-                                    fontSize = 12.sp,
-                                    color = Gray700
-                                )
-                            }
-                        }
+                        )
+                        {
+                            Column(modifier = Modifier.padding(12.dp))
+                            {
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically)
+                                {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                            .background(Green50, RoundedCornerShape(10.dp)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.CheckCircle,
+                                            contentDescription = null,
+                                            tint = Green600,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    Column {
+                                        Text(
+                                            text = "Recommendations",
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Gray900
+                                        )
+                                        Text(
+                                            text = "Self-care suggestions",
+                                            fontSize = 12.sp,
+                                            color = Gray500
+                                        )
+                                    }
+                                }
 
-                        //  Each recommendation as card
-                        flowState.recommendation.forEach { rec ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                elevation = CardDefaults.cardElevation(4.dp),
-                                border = BorderStroke(1.dp, Color(0xFFC8E6C9))
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(14.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("• ", color = Color(0xFF2E7D32))
-                                    Text(
-                                        text = rec,
-                                        fontSize = 14.sp,
-                                        color = Gray900
-                                    )
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                //  Each recommendation as card
+                                flowState.recommendation.forEach { rec ->
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp),
+                                        shape = RoundedCornerShape(10.dp),
+                                        elevation = CardDefaults.cardElevation(4.dp),
+                                        border = BorderStroke(1.dp, Green100),
+                                        colors = CardDefaults.cardColors(containerColor = Green50),
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.padding(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.CheckCircle,
+                                                contentDescription = null,
+                                                tint = Green600,
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = rec,
+                                                fontSize = 14.sp,
+                                                color = Gray900
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+
                 }
             }
 
             // Medical Disclaimer
             item {
-                Surface(
+                Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    color = Blue50,
-                    border = androidx.compose.foundation.BorderStroke(2.dp, Purple600)
+                    colors = CardDefaults.cardColors(containerColor = White),
+                    elevation = CardDefaults.cardElevation(0.dp),
+                    border = BorderStroke(1.dp, Red100)
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
@@ -690,21 +831,22 @@ fun SymptomResultScreen(
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = Purple600,
+                            tint = Red600,
                             modifier = Modifier.size(20.dp)
                         )
                         Column {
                             Text(
                                 text = "Medical Disclaimer",
                                 fontSize = 14.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Red50
+                                fontWeight = FontWeight.SemiBold,
+                                color = Red600
+
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "This analysis is for informational purposes only and does not replace professional medical advice. Always consult with a healthcare provider for accurate diagnosis and treatment.",
                                 fontSize = 12.sp,
-                                color = Orange500,
+                                color = Red600,
                                 lineHeight = 18.sp
                             )
                         }
@@ -716,105 +858,154 @@ fun SymptomResultScreen(
             item {
                 Button(
                     onClick = { viewModel.resetSymptomFlow() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Blue600)
                 ) {
-                    Text("Analyze Another Symptom")
+                    Text(
+                        "Analyze Another Symptom",
+                        fontWeight = FontWeight.SemiBold,
+                        color = White
+                    )
                 }
             }
+
         }
     }
 }
 
-@Composable
-fun SymptomFollowUpScreen(
-    flowState: SymptomFlowState.FollowUp,
-    viewModel: SymptomViewModel
-) {
-    var selectedOption by remember { mutableStateOf<String?>(null) }
+    @Composable
+    fun SymptomFollowUpScreen(
+        flowState: SymptomFlowState.FollowUp,
+        viewModel: SymptomViewModel
+    ) {
+        var selectedOption by remember { mutableStateOf<String?>(null) }
 
-    Scaffold(
-        containerColor = Color.Transparent
-    ) { padding ->
+        Scaffold(
+            modifier = Modifier.statusBarsPadding(),
+            contentWindowInsets = WindowInsets(0),
+            containerColor = Blue50
+        ) { padding ->
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = White),
-                elevation = CardDefaults.cardElevation(10.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .statusBarsPadding()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center
             ) {
 
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = White),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    border = BorderStroke(1.dp, Blue100)
+
                 ) {
 
-                    Text(
-                        text = "Quick Follow-Up",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Gray900
-                    )
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+// Header
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .background(Blue50, RoundedCornerShape(10.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Psychology,
+                                    contentDescription = null,
+                                    tint = Blue600,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "Quick Follow-Up",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Gray900
+                                )
+                                Text(
+                                    text = "One more question to refine results",
+                                    fontSize = 12.sp,
+                                    color = Gray500
+                                )
+                            }
+                        }
 
-                    Text(
-                        text = flowState.question,
-                        fontSize = 16.sp,
-                        color = Gray700
-                    )
+                        //question
+                        Text(
+                            text = flowState.question,
+                            fontSize = 16.sp,
+                            color = Gray700,
+                            lineHeight = 22.sp
+                        )
 
-                    flowState.options?.forEach { option ->
+                        //options
+                        flowState.options?.forEach { option ->
 
-                        val isSelected = selectedOption == option
+                            val isSelected = selectedOption == option
 
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    selectedOption = option
-                                },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isSelected) Blue200 else White
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        selectedOption = option
+                                    },
+                                shape = RoundedCornerShape(12.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = if (isSelected) Blue600 else Blue50
+                                ),
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (isSelected) Blue600 else Blue100
+                                )
+                            ) {
+                                Text(
+                                    text = option,
+                                    modifier = Modifier.padding(14.dp),
+                                    fontSize = 14.sp,
+                                    color = if (isSelected) White else Gray700,
+                                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Button(
+                            onClick = {
+                                selectedOption?.let {
+                                    viewModel.submitFollowUpAnswer(it)
+                                }
+                            },
+                            enabled = selectedOption != null,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (selectedOption != null) Blue600 else Blue100
                             ),
-                            border = BorderStroke(
-                                1.dp,
-                                if (isSelected) Blue600 else Gray300
-                            )
+                            shape = RoundedCornerShape(12.dp)
                         ) {
                             Text(
-                                text = option,
-                                modifier = Modifier.padding(16.dp),
-                                fontSize = 14.sp,
-                                color = if (isSelected) White else Gray900
+                                "Continue",
+                                fontWeight = FontWeight.SemiBold,
+                                color = White
                             )
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(
-                        onClick = {
-                            selectedOption?.let {
-                                viewModel.submitFollowUpAnswer(it)
-                            }
-                        },
-                        enabled = selectedOption != null,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedOption != null) Blue600 else Gray400
-                        )
-                    ) {
-                        Text("Continue")
-                    }
                 }
             }
         }
     }
-}
+
+
+
