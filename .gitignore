@@ -17,3 +17,4 @@ app/google-services.json
 gradle.properties
 docs/
 .idea/markdown.xml
+.idea/appInsightsSettings.xml
