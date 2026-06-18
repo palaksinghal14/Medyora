@@ -1,6 +1,7 @@
 package com.palak.medyora.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,7 +51,11 @@ import androidx.compose.ui.unit.sp
 import com.palak.medyora.model.UserProfile
 import com.palak.medyora.ui.components.FullScreenError
 import com.palak.medyora.ui.components.InlineError
+import com.palak.medyora.ui.theme.Blue100
+import com.palak.medyora.ui.theme.Blue50
 import com.palak.medyora.ui.theme.Blue600
+import com.palak.medyora.ui.theme.Gray200
+import com.palak.medyora.ui.theme.Gray500
 import com.palak.medyora.ui.theme.Gray600
 import com.palak.medyora.ui.theme.Gray700
 import com.palak.medyora.ui.theme.Gray900
@@ -130,6 +137,7 @@ fun EditProfileScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -147,7 +155,8 @@ fun EditProfileScreen(
                 Text(
                     text = "Update your profile information",
                     fontSize = 16.sp,
-                    color = Gray600
+                    color = Gray600,
+                    modifier=Modifier.padding(top=4.dp)
                 )
             }
         }
@@ -220,9 +229,10 @@ fun EditProfileScreen(
                     onSave(updatedProfile)  // will perform some action and give updated profile
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Blue600)
             ) {
+                Icon(imageVector = Icons.Outlined.Edit , contentDescription = "" , tint = White)
                 Text(text = "Save Changes", fontSize = 16.sp)
             }
         }
@@ -253,15 +263,16 @@ fun EditPersonalDetailsCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = Gray900)
+            color = Blue100
+        )
     ){
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
-                    tint = Gray700
+                    tint = Blue600,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -281,10 +292,15 @@ fun EditPersonalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 )
             )
             OutlinedTextField(
@@ -295,10 +311,15 @@ fun EditPersonalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
@@ -310,10 +331,15 @@ fun EditPersonalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
@@ -325,10 +351,15 @@ fun EditPersonalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 )
             )
             OutlinedTextField(
@@ -339,10 +370,15 @@ fun EditPersonalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
@@ -370,15 +406,15 @@ fun EditPhysicalDetailsCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = Gray900)
+            color = Blue100)
     ){
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Psychology,
                     contentDescription = null,
-                    tint = Gray700
+                    tint = Blue600
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -398,10 +434,15 @@ fun EditPhysicalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 )
             )
             OutlinedTextField(
@@ -412,10 +453,15 @@ fun EditPhysicalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 )
             )
             OutlinedTextField(
@@ -426,10 +472,15 @@ fun EditPhysicalDetailsCard(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Blue600,
+                    unfocusedBorderColor = Blue100,
+                    focusedLabelColor = Blue600,
+                    unfocusedLabelColor = Gray500,
+                    cursorColor = Blue600,
+                    focusedTextColor = Gray900,
+                    unfocusedTextColor = Gray900,
                     focusedContainerColor = White,
-                    unfocusedContainerColor= White,
-                    focusedTextColor= Gray900,
-                    unfocusedTextColor=Gray900
+                    unfocusedContainerColor = White
                 )
             )
 
@@ -451,7 +502,7 @@ fun EditMedicalDetailsCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = White),
-        border = BorderStroke(1.dp, Gray900)
+        border = BorderStroke(1.dp, Blue100)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
@@ -459,7 +510,7 @@ fun EditMedicalDetailsCard(
                 Icon(
                     imageVector = Icons.Default.MedicalServices,
                     contentDescription = null,
-                    tint = Gray700
+                    tint = Blue600
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
