@@ -252,7 +252,7 @@ Medyora is built for informational and educational purposes only. AI-generated s
 ## 👤 Author
 
 - **Name:** [Palak Singhal ]
-- **GitHub:** [https://github.com/palaksinghal14]
+- **Gmail:** [palaksinghal148@gmail.com]
 - **Linkedin:** [https://linkedin.com/in/palak-singhal-14a78324a]
 
 ---
